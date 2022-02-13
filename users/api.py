@@ -5,10 +5,11 @@ from typing import Optional
 import pytz
 from django.core.mail import EmailMessage
 from django.utils.datetime_safe import datetime
+from django.views import View
 from knox.models import AuthToken
 from rest_framework.exceptions import ErrorDetail
 from rest_framework.generics import GenericAPIView, RetrieveAPIView
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.serializers import ModelSerializer, Serializer
@@ -71,17 +72,22 @@ class RegisterAPI(GenericAPIView):
         )
 
 
-
 class LoginAPI(GenericAPIView):
     serializer_class = LoginSerializer
+    authentication_classes = ()
+    permission_classes = (AllowAny,)
 
     def post(self, request, *args, **kwargs):
+        print(request.data)
+
         serializer: LoginSerializer
         serializer = self.get_serializer(data=request.data)
-
-        not_validated = validation_error_response(serializer)
-        if not_validated:
-            return not_validated
+        try:
+            serializer.is_valid(raise_exception=True)
+        except IrisUser.DoesNotExist:
+            return Response({
+                'result': 'invalid_user'
+            })
 
         data = serializer.validated_data
         # possible results:
@@ -95,6 +101,7 @@ class LoginAPI(GenericAPIView):
         if data['user']:
             response_data['user'] = UserSerializer(data['user'], context=self.get_serializer_context()).data
             response_data['token'] = AuthToken.objects.create(data['user'])[1]
+
         return Response(response_data)
 
 

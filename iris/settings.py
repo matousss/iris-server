@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # 3-rd party
+    'corsheaders',
     'rest_framework',
     'knox',
 
@@ -53,7 +54,10 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
+
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -133,6 +137,7 @@ AUTH_USER_MODEL = 'users.IrisUser'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': ('knox.auth.TokenAuthentication',),
+    'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAuthenticated',)
 }
 
 REST_KNOX = {
@@ -145,7 +150,6 @@ REST_KNOX = {
     'EXPIRY_DATETIME_FORMAT': 'yyyy/mm/dd',
 }
 
-
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 # EMAIL_USE_TLS = True
@@ -153,6 +157,6 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # EMAIL_PORT = 587
 # EMAIL_HOST_USER = getenv('EMAIL_HOST_USER')
 # EMAIL_HOST_PASSWORD = getenv('EMAIL_HOST_PASSWORD')
-
-
-
+CORS_ORIGIN_WHITELIST = (
+  'http://localhost:3000',
+)

@@ -3,4 +3,3 @@ from knox.views import LoginView as KnoxLoginView
 
 
 # Create your views here.
-

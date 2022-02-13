@@ -42,10 +42,12 @@ class LoginSerializer(Serializer):
 
     def validate(self, data):
         user = authenticate(**data)
+
         result = 'unknown_error'
         if not user:
             result = 'invalid_user'
-            if IrisUser.objects.get(username=data['username']):
+            entry = IrisUser.objects.get(username=data['username'])
+            if entry and not entry.is_active:
                 result = 'inactive_user'
         else:
             result = 'success'
