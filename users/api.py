@@ -39,6 +39,9 @@ def validation_error_response(serializer: Serializer) -> Optional[Response]:
 class RegisterAPI(GenericAPIView):
     serializer_class = RegisterSerializer
 
+    authentication_classes = ()
+    permission_classes = (AllowAny,)
+
     def post(self, request: Request, *args, **kwargs):
         serializer: RegisterSerializer
         serializer = self.get_serializer(data=request.data)
@@ -47,12 +50,17 @@ class RegisterAPI(GenericAPIView):
         if not_validated:
             return not_validated
 
-        user = serializer.save()
-        activation = AccountActivation.objects.get_or_create(
+        user = serializer.create(serializer.validated_data)
+        activation, _ = AccountActivation.objects.get_or_create(
             user=user,
-            activation_code="ahoj1234",
-            expiration=datetime.now(tz=pytz.UTC) + timedelta(hours=12)
+            defaults={
+                'activation_code': 'ahoj1234',
+                'expiration': datetime.now(tz=pytz.UTC) + timedelta(hours=12),
+            }
         )
+        user.save()
+
+
         activation.save()
         confirmation_mail = EmailMessage(
             'Activate Account',
