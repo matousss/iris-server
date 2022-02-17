@@ -1,28 +1,26 @@
-import os
 from datetime import timedelta
 from typing import Optional
 
 import pytz
 from django.core.mail import EmailMessage
 from django.utils.datetime_safe import datetime
-from django.views import View
 from knox.models import AuthToken
 from rest_framework.exceptions import ErrorDetail
 from rest_framework.generics import GenericAPIView, RetrieveAPIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.request import Request
 from rest_framework.response import Response
-from rest_framework.serializers import ModelSerializer, Serializer
+from rest_framework.serializers import Serializer
 
 from .models import AccountActivation, IrisUser
 from .serializers import RegisterSerializer, UserSerializer, LoginSerializer, ActivationSerializer
 
 
 def validation_error_response(serializer: Serializer) -> Optional[Response]:
+    # noinspection PyBroadException
     try:
         serializer.is_valid(raise_exception=True)
 
-    # noinspection PyBroadException
     except Exception:
         error_dict = {}
         for error in serializer.errors.keys():
@@ -51,15 +49,21 @@ class RegisterAPI(GenericAPIView):
             return not_validated
 
         user = serializer.create(serializer.validated_data)
-        activation, _ = AccountActivation.objects.get_or_create(
+
+        activation_code = 'ahoj1234'
+        expiration = datetime.now(tz=pytz.UTC) + timedelta(hours=12)
+        activation, get = AccountActivation.objects.get_or_create(
             user=user,
             defaults={
-                'activation_code': 'ahoj1234',
-                'expiration': datetime.now(tz=pytz.UTC) + timedelta(hours=12),
+                'activation_code': activation_code,
+                'expiration': expiration,
             }
         )
-        user.save()
+        if get:
+            activation.activation_code = activation_code
+            activation.expiration = expiration
 
+        user.save()
 
         activation.save()
         confirmation_mail = EmailMessage(
@@ -97,16 +101,16 @@ class LoginAPI(GenericAPIView):
                 'result': 'invalid_user'
             })
 
-        data = serializer.validated_data
+        success, data = serializer.validated_data
         # possible results:
         #   - 'success'
         #   - 'invalid_user'
         #   - 'inactive_user'
         response_data = {
             'result': data['result'],
-            'user': None
+            'user': None,
         }
-        if data['user']:
+        if success:
             response_data['user'] = UserSerializer(data['user'], context=self.get_serializer_context()).data
             response_data['token'] = AuthToken.objects.create(data['user'])[1]
 
@@ -134,9 +138,9 @@ class AccountActivationAPI(GenericAPIView):
         if not_validated:
             return not_validated
 
-        data = serializer.validated_data
+        success, data = serializer.validated_data
 
-        if data['result'] != 'success':
+        if not success:
             data['user'] = None
             return Response(data)
 

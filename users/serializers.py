@@ -44,18 +44,23 @@ class LoginSerializer(Serializer):
         user = authenticate(**data)
 
         result = 'unknown_error'
+        valid = False
         if not user:
             result = 'invalid_user'
             entry = IrisUser.objects.get(username=data['username'])
             if entry and not entry.is_active:
                 result = 'inactive_user'
+                user = entry
         else:
             result = 'success'
+            valid = True
 
-        return {
-            'result': result,
-            'user': user,
-        }
+        return (valid,
+                {
+                    'result': result,
+                    'user': user,
+                }
+                )
         # raise ValidationError('Password or Username is invalid')
 
 
@@ -71,7 +76,7 @@ class ActivationSerializer(Serializer):
 
     def validate(self, data):
         user = IrisUser.objects.get(username=data['username'])
-
+        success = False
         if not user:
             result = 'invalid_user'
         else:
@@ -85,10 +90,13 @@ class ActivationSerializer(Serializer):
 
             elif data['activation_code'] == activation.activation_code:
                 result = 'success'
+                success = True
 
             else:
                 result = 'invalid_code'
-        return {
-            'result': result,
-            'user': user,
-        }
+        return (success,
+                {
+                    'result': result,
+                    'user': user,
+                }
+                )
