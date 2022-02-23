@@ -63,7 +63,7 @@ class LoginSerializer(Serializer):
                 )
         # raise ValidationError('Password or Username is invalid')
 
-
+# todo user from token activate
 class ActivationSerializer(Serializer):
     def update(self, instance, validated_data):
         pass

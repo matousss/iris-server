@@ -126,7 +126,7 @@ class UserAPIView(RetrieveAPIView):
     def get_object(self):
         return self.request.user
 
-
+# todo user from token mby?
 class AccountActivationAPI(GenericAPIView):
     serializer_class = ActivationSerializer
 
