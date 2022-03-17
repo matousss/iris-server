@@ -75,7 +75,10 @@ class ActivationSerializer(Serializer):
     activation_code = CharField()
 
     def validate(self, data):
-        user = IrisUser.objects.get(username=data['username'])
+        try:
+            user = IrisUser.objects.get(username=data['username'])
+        except IrisUser.DoesNotExist:
+            user = None
         success = False
         if not user:
             result = 'invalid_user'

@@ -2,6 +2,8 @@ from datetime import timedelta
 from typing import Optional
 
 import pytz
+import random
+import string
 from django.core.mail import EmailMessage
 from django.utils.datetime_safe import datetime
 from knox.models import AuthToken
@@ -50,7 +52,7 @@ class RegisterAPI(GenericAPIView):
 
         user = serializer.create(serializer.validated_data)
 
-        activation_code = 'ahoj1234'
+        activation_code = ''.join(random.choice(string.digits) for _ in range(6))
         expiration = datetime.now(tz=pytz.UTC) + timedelta(hours=12)
         activation, get = AccountActivation.objects.get_or_create(
             user=user,
@@ -90,8 +92,6 @@ class LoginAPI(GenericAPIView):
     permission_classes = (AllowAny,)
 
     def post(self, request, *args, **kwargs):
-        print(request.data)
-
         serializer: LoginSerializer
         serializer = self.get_serializer(data=request.data)
         try:
@@ -126,9 +126,12 @@ class UserAPIView(RetrieveAPIView):
     def get_object(self):
         return self.request.user
 
+
 # todo user from token mby?
 class AccountActivationAPI(GenericAPIView):
     serializer_class = ActivationSerializer
+    authentication_classes = ()
+    permission_classes = (AllowAny,)
 
     def post(self, request, *args, **kwargs):
         serializer: ActivationSerializer

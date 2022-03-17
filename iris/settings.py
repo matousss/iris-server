@@ -41,15 +41,16 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'channels',
 
     # 3-rd party
+    'channels',
     'corsheaders',
     'rest_framework',
     'knox',
 
     # production
     'users',
+    'iris_messages',
 ]
 
 MIDDLEWARE = [
@@ -161,5 +162,5 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # EMAIL_HOST_USER = getenv('EMAIL_HOST_USER')
 # EMAIL_HOST_PASSWORD = getenv('EMAIL_HOST_PASSWORD')
 CORS_ORIGIN_WHITELIST = (
-  'http://localhost:3000',
+    'http://localhost:3000',
 )
