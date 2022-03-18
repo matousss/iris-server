@@ -49,7 +49,7 @@ class Migration(migrations.Migration):
                 ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
                 ('creation', models.DateTimeField(auto_now_add=True)),
                 ('text', models.TextField(null=True)),
-                ('media', models.FileField(upload_to=iris_messages.models.file_path)),
+                ('media', models.FileField(upload_to=iris_messages.models.media_file_path)),
                 ('author', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='media_message_author', to=settings.AUTH_USER_MODEL)),
                 ('channel', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='iris_messages.channel')),
             ],

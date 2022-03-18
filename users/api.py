@@ -45,11 +45,9 @@ class RegisterAPI(GenericAPIView):
     def post(self, request: Request, *args, **kwargs):
         serializer: RegisterSerializer
         serializer = self.get_serializer(data=request.data)
-
         not_validated = validation_error_response(serializer)
         if not_validated:
             return not_validated
-
         user = serializer.create(serializer.validated_data)
 
         activation_code = ''.join(random.choice(string.digits) for _ in range(6))

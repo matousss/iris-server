@@ -25,7 +25,7 @@ class GetMedia(GenericAPIView):
         if not channel.users.contains(user):
             return HttpResponseForbidden()
 
-        p = settings.BASE_DIR.joinpath(f'media/' + '/'.join(kwargs.values()))
+        p = settings.BASE_DIR.joinpath(f'{settings.MEDIA_DIR}/' + '/'.join(kwargs.values()))
         if os.path.exists(p):
             return FileResponse(open(p, 'rb'), content_type=mimetypes.guess_type(kwargs['file'])[0])
 
