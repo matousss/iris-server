@@ -40,3 +40,8 @@ class MediaMessage(Message):
     author = ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=SET_NULL, related_name='media_message_author')
     text = TextField(null=True, blank=False)
     media = FileField(upload_to=file_path)
+
+
+class FriendShip(Model):
+    id = ForeignKey(settings.AUTH_USER_MODEL, primary_key=True, on_delete=CASCADE)
+    friends = ManyToManyField(settings.AUTH_USER_MODEL, blank=True)
