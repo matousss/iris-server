@@ -1,6 +1,6 @@
 from uuid import uuid4
 from django.db.models import Model, UUIDField, ForeignKey, TextField, FileField, DateTimeField, \
-    ManyToManyField, SET_NULL, CASCADE
+    ManyToManyField, SET_NULL, CASCADE, OneToOneField
 from django.conf import settings
 
 
@@ -43,5 +43,5 @@ class MediaMessage(Message):
 
 
 class FriendShip(Model):
-    id = ForeignKey(settings.AUTH_USER_MODEL, primary_key=True, on_delete=CASCADE)
-    friends = ManyToManyField(settings.AUTH_USER_MODEL, blank=True)
+    id = OneToOneField(settings.AUTH_USER_MODEL, primary_key=True, on_delete=CASCADE, related_name='user')
+    friends = ManyToManyField(settings.AUTH_USER_MODEL, blank=True, related_name='friends')
