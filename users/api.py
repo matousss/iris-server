@@ -36,6 +36,17 @@ def validation_error_response(serializer: Serializer) -> Optional[Response]:
     return None
 
 
+def send_activation_email(user: IrisUser, activation: AccountActivation = None):
+    if not activation:
+        activation = AccountActivation.objects.get(user=user)
+    confirmation_mail = EmailMessage(
+        'Activate Account',
+        f'Secret code is: {activation.activation_code}',
+        'noreply.iris@gmail.com',
+        [user.email],
+    )
+    confirmation_mail.send()
+
 class RegisterAPI(GenericAPIView):
     serializer_class = RegisterSerializer
 
@@ -66,13 +77,7 @@ class RegisterAPI(GenericAPIView):
         user.save()
 
         activation.save()
-        confirmation_mail = EmailMessage(
-            'Activate Account',
-            f'Secret code is: {activation.activation_code}',
-            'noreply.iris@gmail.com',
-            [serializer.validated_data['email']],
-        )
-        confirmation_mail.send()
+        send_activation_email(user)
         # token = AuthToken.objects.create(user)
 
         return Response(
@@ -116,9 +121,6 @@ class LoginAPI(GenericAPIView):
 
 
 class UserAPIView(RetrieveAPIView):
-    permission_classes = [
-        IsAuthenticated
-    ]
     serializer_class = UserSerializer
 
     def get_object(self):

@@ -1,15 +1,18 @@
+from django.core.exceptions import BadRequest
+from rest_framework.exceptions import APIException, ValidationError
 from rest_framework.generics import GenericAPIView, ListAPIView
 
-from server.iris_messages.serializers import ChannelSerializer
+
+from .serializers import ChannelSerializer
 
 
 class ChannelAPIView(GenericAPIView):
     serializer_class = ChannelSerializer
 
     # get channel
-    def get(self, request, *args, **kwargs):
-
-
+    def get(self, request, *args, channel_id=None, **kwargs):
+        if not channel_id:
+            raise ValidationError(detail={'channel_id': 'required'})
         pass
 
     # channel creation

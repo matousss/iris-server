@@ -1,6 +1,6 @@
 from rest_framework.serializers import ModelSerializer, Serializer
 
-from server.iris_messages.models import Channel, DirectChannel, GroupChannel
+from .models import Channel, DirectChannel, GroupChannel
 
 
 class ChannelSerializer(ModelSerializer):
