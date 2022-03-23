@@ -1,12 +1,11 @@
 from .models import Channel, DirectChannel, GroupChannel
-from users.models import IrisUser
 
 
-def has_view_perms(user: IrisUser, channel: Channel):
+def has_view_perms(user, channel: Channel):
     return channel.users.contains(user)
 
 
-def has_edit_perms(user: IrisUser, channel: Channel):
+def has_edit_perms(user, channel: Channel):
     if not has_view_perms(user, channel):
         return False
 

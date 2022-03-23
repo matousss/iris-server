@@ -17,7 +17,7 @@
   pk: 2
   fields:
     password: pbkdf2_sha256$320000$5PUeK6tWZBJTVhSwd8aacd$MNLYXObWVfku2V6NdbL6zNaUuRnvGtR0pUp4VY4YQR8=
-    last_login: null
+    last_login: 2022-03-23 18:37:35.385048+00:00
     is_superuser: true
     username: admin
     first_name: ''
@@ -28,3 +28,12 @@
     email: admin@admin.admin
     groups: []
     user_permissions: []
+
+# 4166013a157f53b0a087e31c62b14ea2374538bf231f675c506e598783a8a855
+- model: knox.authtoken
+  pk: 031b7ac3c6db1acae4499efb014d351856bce4a7a001f02540a98dbd8b2655a9001060bdf65ec02961496482b28e111815d50781a0616bbda6efa072ae448e6f
+  fields:
+    token_key: 4166013a
+    user: 1
+    created: 2022-03-23 18:37:48.888509+00:00
+    expiry: 2222-02-22 22:22:22+00:00

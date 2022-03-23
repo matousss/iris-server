@@ -25,19 +25,14 @@ class Message(Model):
     creation = DateTimeField(blank=False, null=False, auto_now_add=True)
     channel = ForeignKey('iris_messages.Channel', blank=False, null=False, on_delete=CASCADE)
 
-    class Meta:
-        abstract = True
-
 
 class TextMessage(Message):
-    text = TextField(null=False, blank=False)
+    text = TextField(null=True, blank=False)
 
 
 def media_file_path(instance, file):
     return f'{settings.MEDIA_DIR}/messages/{instance.channel.id}/{instance.id}/{file}'
 
 
-class MediaMessage(Message):
-    author = ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=SET_NULL, related_name='media_message_author')
-    text = TextField(null=True, blank=False)
+class MediaMessage(TextMessage):
     media = FileField(upload_to=media_file_path)

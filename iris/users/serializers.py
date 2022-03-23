@@ -1,10 +1,12 @@
 import pytz
 from django.contrib.auth import authenticate
 from django.utils.datetime_safe import datetime
-from rest_framework.exceptions import ValidationError
+from rest_framework.exceptions import ValidationError, APIException, NotAcceptable, AuthenticationFailed
 from rest_framework.serializers import Serializer, CharField, ModelSerializer
+from rest_framework.status import HTTP_204_NO_CONTENT
 
 from .models import IrisUser, AccountActivation
+from ..exceptions import NoContentException
 
 
 class UserSerializer(ModelSerializer):
@@ -29,6 +31,9 @@ class RegisterSerializer(ModelSerializer):
         return user
 
 
+
+
+
 class LoginSerializer(Serializer):
 
     def update(self, instance, validated_data):
@@ -42,26 +47,15 @@ class LoginSerializer(Serializer):
 
     def validate(self, data):
         user = authenticate(**data)
-
-        result = 'unknown_error'
-        valid = False
         if not user:
-            result = 'invalid_user'
             entry = IrisUser.objects.get(username=data['username'])
             if entry and not entry.is_active:
-                result = 'inactive_user'
-                user = entry
-        else:
-            result = 'success'
-            valid = True
+                raise APIException(detail='User not found', code='user_not_found')
+            raise AuthenticationFailed(detail={'details': 'invalid_user'})
 
-        return (valid,
-                {
-                    'result': result,
-                    'user': user,
-                }
-                )
+        return (True, user)
         # raise ValidationError('Password or Username is invalid')
+
 
 # todo user from token activate
 class ActivationSerializer(Serializer):
@@ -78,28 +72,22 @@ class ActivationSerializer(Serializer):
         try:
             user = IrisUser.objects.get(username=data['username'])
         except IrisUser.DoesNotExist:
-            user = None
+            raise NotAcceptable(detail={'user': 'not_found'})
         success = False
-        if not user:
-            result = 'invalid_user'
-        else:
+        ###
+        # Test pozornosti:
+        #   otevřete: https://docs.google.com/forms/d/1yRFpxVO_MCHfLbWnaoeWMDehMHMvRQc3dok562nNT8M
+        #   a do odpovědi dejte "Ne"
+        # ###
+        try:
             activation = AccountActivation.objects.get(user=user)
+        except AccountActivation.DoesNotExist:
+            raise NotAcceptable(detail={'details': 'no_pending_activation'})
 
-            if not activation:
-                result = 'no_pending_activation'
+        if activation.expiration and activation.expiration < datetime.now(tz=pytz.UTC):
+            raise NoContentException(detail={'details': 'expired_code'}, code='expired_code')
 
-            elif not activation.expiration or activation.expiration < datetime.now(tz=pytz.UTC):
-                result = 'expired_code'
+        if data['activation_code'] == activation.activation_code:
+            return True, user
 
-            elif data['activation_code'] == activation.activation_code:
-                result = 'success'
-                success = True
-
-            else:
-                result = 'invalid_code'
-        return (success,
-                {
-                    'result': result,
-                    'user': user,
-                }
-                )
+        raise ValidationError(detail='Invalid activation code', code='invalid_code')
