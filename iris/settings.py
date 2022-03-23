@@ -50,9 +50,9 @@ INSTALLED_APPS = [
     'knox',
 
     # production
-    'users',
-    'iris_messages',
-    'profiles',
+    'iris.users',
+    'iris.messages',
+    'iris.profiles',
 ]
 
 MIDDLEWARE = [
@@ -140,7 +140,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 ASGI_APPLICATION = "iris.asgi.application"
 
-AUTH_USER_MODEL = 'users.IrisUser'
+AUTH_USER_MODEL = 'iris_users.IrisUser'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': ('knox.auth.TokenAuthentication',),

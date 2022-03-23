@@ -5,8 +5,7 @@ from django.conf import settings
 from django.http import FileResponse, Http404, HttpResponseNotFound, HttpResponseForbidden
 from django.contrib.auth import authenticate
 from rest_framework.generics import GenericAPIView
-from rest_framework.permissions import AllowAny
-from users.models import IrisUser
+
 
 from .models import Channel
 
@@ -16,7 +15,6 @@ class GetMedia(GenericAPIView):
     # permission_classes = (AllowAny,)
 
     def get(self, request, *args, **kwargs):
-        user: IrisUser
         user = authenticate(request)
         try:
             channel = Channel.objects.get(id=kwargs['channel_id'])

@@ -22,6 +22,6 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('users.urls')),
-    path('', include('iris_messages.urls')),
+    path('', include('iris.users.urls')),
+    path('', include('iris.messages.urls')),
 ]

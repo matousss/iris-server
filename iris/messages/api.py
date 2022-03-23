@@ -1,8 +1,9 @@
 from django.core.exceptions import BadRequest
+from django.http import HttpResponse
 from rest_framework.exceptions import APIException, ValidationError
-from rest_framework.generics import GenericAPIView, ListAPIView
+from rest_framework.generics import GenericAPIView, ListAPIView, RetrieveAPIView
 
-
+from .models import Channel
 from .serializers import ChannelSerializer
 
 
@@ -27,5 +28,8 @@ class ChannelAPIView(GenericAPIView):
 
 class GetChannelsAPI(ListAPIView):
     # return all channels user can view
-    def get(self, request, *args, **kwargs):
-        pass
+    serializer_class = ChannelSerializer
+    queryset = Channel.objects.all()
+
+    def filter_queryset(self, queryset):
+        return queryset.filter(users__exact=self.request.user)

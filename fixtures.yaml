@@ -1,7 +1,22 @@
-- model: users.irisuser
+- model: iris_users.irisuser
   pk: 1
   fields:
-    password: pbkdf2_sha256$320000$dWL1vvB1eTahymywJpfbQo$7o/gOy3vABjSGGftpPx+xus04l+Qa5vuVHC5eOB1ug0=
+    password: pbkdf2_sha256$320000$DAAlhPNkMGp79pdOHwv0kv$rHIy/ia91vi1sCWoh13aamLpXnkQOvxuVQj32x0OEqo=
+    last_login: null
+    is_superuser: false
+    username: user
+    first_name: ''
+    last_name: ''
+    is_staff: false
+    is_active: true
+    date_joined: 2022-03-23 15:43:27.161487+00:00
+    email: email@domain.globaldomain
+    groups: []
+    user_permissions: []
+- model: iris_users.irisuser
+  pk: 2
+  fields:
+    password: pbkdf2_sha256$320000$5PUeK6tWZBJTVhSwd8aacd$MNLYXObWVfku2V6NdbL6zNaUuRnvGtR0pUp4VY4YQR8=
     last_login: null
     is_superuser: true
     username: admin
@@ -9,7 +24,7 @@
     last_name: ''
     is_staff: true
     is_active: true
-    date_joined: 2022-02-13 00:23:06.018523+00:00
-    email: admin@test.no
+    date_joined: 2022-03-23 15:45:02.981814+00:00
+    email: admin@admin.admin
     groups: []
     user_permissions: []
