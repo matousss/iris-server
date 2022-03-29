@@ -1,5 +1,5 @@
 from django.http import FileResponse
-from django.urls import re_path, path
+from django.urls import re_path, path, include
 from rest_framework.routers import DefaultRouter
 
 from .views import GetMedia
@@ -10,12 +10,13 @@ websockets_patterns = [
 ]
 
 router = DefaultRouter()
-router.register('api/channel', ChannelViewSet, basename='channel')
-router.register('api/message', MessageViewSet, basename='message')
+router.register(r'channel', ChannelViewSet, basename='channel')
+router.register(r'message', MessageViewSet, basename='message')
 
 urlpatterns = [
      path('media/<str:channel_id>/<str:message_id>/<str:file>', GetMedia.as_view()),
      # path('api/channel/<uuid:channel_id>', ChannelAPIView.as_view()),
      # path('api/channel', GetChannelsAPI.as_view()),
-] + router.urls
+     path('api/', include(router.urls))
+]
 

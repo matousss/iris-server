@@ -1,4 +1,6 @@
 from uuid import uuid4
+
+from django.core.files.storage import FileSystemStorage
 from django.db.models import Model, UUIDField, ForeignKey, TextField, FileField, DateTimeField, \
     ManyToManyField, SET_NULL, CASCADE, OneToOneField
 from django.conf import settings
@@ -16,7 +18,7 @@ class DirectChannel(Channel):
 class GroupChannel(Channel):
     name = TextField(max_length=256, blank=False, null=True)
     owner = ForeignKey(settings.AUTH_USER_MODEL, null=False, blank=False, on_delete=CASCADE, related_name='owner')
-    admins = ManyToManyField(settings.AUTH_USER_MODEL, related_name='admins')
+    admins = ManyToManyField(settings.AUTH_USER_MODEL, blank=True, related_name='admins')
 
 
 class Message(Model):
@@ -24,10 +26,11 @@ class Message(Model):
     author = ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=SET_NULL)
     creation = DateTimeField(blank=False, null=False, auto_now_add=True)
     channel = ForeignKey('iris_messages.Channel', blank=False, null=False, on_delete=CASCADE)
+    text = TextField(null=True, blank=False)
 
 
 class TextMessage(Message):
-    text = TextField(null=True, blank=False)
+    pass
 
 
 def media_file_path(instance, file):

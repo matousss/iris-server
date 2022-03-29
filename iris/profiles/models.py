@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.db.models import OneToOneField, Model, ManyToManyField, FileField, CASCADE
 
 
@@ -7,7 +8,6 @@ def avatar_file_path(instance, file):
 
 
 class Profile(Model):
-    user = OneToOneField(settings.AUTH_USER_MODEL, on_delete=CASCADE, related_name='user')
+    user = OneToOneField(get_user_model(), on_delete=CASCADE, related_name='user')
     friends = ManyToManyField(settings.AUTH_USER_MODEL, blank=True, related_name='friends')
     avatar = FileField(default=None, blank=False, null=True, upload_to=avatar_file_path)
-
