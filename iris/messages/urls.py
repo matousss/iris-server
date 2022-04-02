@@ -12,6 +12,7 @@ websockets_patterns = [
 router = DefaultRouter()
 router.register(r'channel', ChannelViewSet, basename='channel')
 router.register(r'message', MessageViewSet, basename='message')
+router.register(r'message', MessageViewSet, basename='message')
 
 urlpatterns = [
      path('media/<str:channel_id>/<str:message_id>/<str:file>', GetMedia.as_view()),
