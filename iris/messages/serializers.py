@@ -29,6 +29,10 @@ class GroupChannelSerializer(ModelSerializer):
     class Meta:
         model = GroupChannel
         fields = ('id', 'name', 'users', 'owner', 'admins')
+        read_only_fields = ('id', 'owner')
+
+    def create(self, validated_data):
+        GroupChannel.objects.create(owner=self.context['request'].user, **validated_data)
 
 
 class ChannelSerializer(ModelSerializer):
@@ -85,4 +89,8 @@ class MessageSerializer(ModelSerializer):
                 detail={'text': 'Text or media must be provided', 'media': 'Text or media must be provided'},
                 code='no_text_or_media')
 
-        return super(MessageSerializer, self).validate(attrs)
+        r = super(MessageSerializer, self).validate(attrs)
+        if self.context['request'].user not in r['channel'].users.all():
+            raise PermissionDenied()
+
+        return r

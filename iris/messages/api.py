@@ -1,19 +1,23 @@
 from uuid import UUID
 
 from django.utils.datastructures import MultiValueDictKeyError
-from rest_framework.exceptions import ValidationError
-from rest_framework.generics import CreateAPIView
-from rest_framework.permissions import IsAdminUser
+from rest_framework import mixins
+from rest_framework.exceptions import ValidationError, MethodNotAllowed
 from rest_framework.response import Response
 from rest_framework.serializers import ModelSerializer
 from rest_framework.status import HTTP_201_CREATED
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.viewsets import ModelViewSet, GenericViewSet
 
 from .models import Channel, Message
 from .serializers import MessageSerializer, AllChannelSerializer
 
 
-class ChannelViewSet(ModelViewSet):
+class ChannelViewSet(mixins.CreateModelMixin,
+                     # mixins.RetrieveModelMixin,
+                     mixins.UpdateModelMixin,
+                     mixins.DestroyModelMixin, # lol klidně ať si to smažou
+                     mixins.ListModelMixin,
+                     GenericViewSet):
     serializer_class = AllChannelSerializer
     queryset = Channel.objects.all()
 
@@ -59,8 +63,8 @@ class ChannelViewSet(ModelViewSet):
 
     # add user or leave channel
     # check perms for adding
-    def patch(self, request, *args, **kwargs):
-        pass
+    # def patch(self, request, *args, **kwargs):
+    #     return MethodNotAllowed(method='PATCH')
 
 
 #
@@ -70,9 +74,13 @@ class ChannelViewSet(ModelViewSet):
 #     queryset = Channel.objects.all()
 
 
-class MessageViewSet(ModelViewSet):
+class MessageViewSet(mixins.CreateModelMixin,
+                     # mixins.RetrieveModelMixin, # asi není potřeba
+                     # mixins.UpdateModelMixin, #todo editování zpráv
+                     # mixins.DestroyModelMixin, #todo mazání zpráv
+                     mixins.ListModelMixin,
+                     GenericViewSet):
     serializer_class = MessageSerializer
-    permission_classes = [HasChannelPermission]
 
     def get_queryset(self):
         return Message.objects.filter(channel__in=Channel.objects.filter(users__exact=self.request.user))

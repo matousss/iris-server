@@ -1,10 +1,14 @@
 from datetime import timedelta
+from os import getenv
 from typing import Optional
 
 import pytz
 import random
 import string
-from django.core.mail import EmailMessage
+
+from django.conf import settings
+from django.core.mail import EmailMessage, EmailMultiAlternatives
+from django.template.loader import get_template
 from django.utils.datetime_safe import datetime
 from knox.models import AuthToken
 from rest_framework.exceptions import ErrorDetail, APIException
@@ -37,16 +41,23 @@ from ..exceptions import NoContentException
 #     return None
 
 
+
 def send_activation_email(user: IrisUser, activation: AccountActivation = None):
     if not activation:
         activation = AccountActivation.objects.get(user=user)
-    confirmation_mail = EmailMessage(
-        'Activate Account',
-        f'Secret code is: {activation.activation_code}',
-        'noreply.iris@gmail.com',
+    context = {'activation_code': activation.activation_code}
+    confirmation_mail = EmailMultiAlternatives(
+        'Activate your account',
+        # f'Your activation code is: {activation.activation_code}'
+        get_template('email_code.txt').render(context),
+        settings.EMAIL_HOST_USER,
         [user.email],
     )
+    confirmation_mail.attach_alternative(get_template('email_code.html').render(context), 'text/html')
     confirmation_mail.send()
+
+
+
 
 
 class RegisterAPI(GenericAPIView):
@@ -93,6 +104,7 @@ class LoginAPI(GenericAPIView):
     serializer_class = LoginSerializer
     authentication_classes = ()
     permission_classes = (AllowAny,)
+
     ###
     # request: {username, password}
     # response:
