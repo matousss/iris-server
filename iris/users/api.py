@@ -1,22 +1,17 @@
-from datetime import timedelta
-from os import getenv
-from typing import Optional
-
-import pytz
 import random
 import string
+from datetime import timedelta
 
+import pytz
 from django.conf import settings
-from django.core.mail import EmailMessage, EmailMultiAlternatives
+from django.core.mail import EmailMultiAlternatives
 from django.template.loader import get_template
 from django.utils.datetime_safe import datetime
 from knox.models import AuthToken
-from rest_framework.exceptions import ErrorDetail, APIException
 from rest_framework.generics import GenericAPIView, RetrieveAPIView
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import AllowAny
 from rest_framework.request import Request
 from rest_framework.response import Response
-from rest_framework.serializers import Serializer
 
 from .models import AccountActivation, IrisUser
 from .serializers import RegisterSerializer, UserSerializer, LoginSerializer, ActivationSerializer
@@ -41,7 +36,6 @@ from ..exceptions import NoContentException
 #     return None
 
 
-
 def send_activation_email(user: IrisUser, activation: AccountActivation = None):
     if not activation:
         activation = AccountActivation.objects.get(user=user)
@@ -55,9 +49,6 @@ def send_activation_email(user: IrisUser, activation: AccountActivation = None):
     )
     confirmation_mail.attach_alternative(get_template('email_code.html').render(context), 'text/html')
     confirmation_mail.send()
-
-
-
 
 
 class RegisterAPI(GenericAPIView):
