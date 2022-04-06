@@ -1,5 +1,6 @@
 import pytz
 from django.contrib.auth import authenticate
+from django.contrib.auth.hashers import check_password
 from django.utils.datetime_safe import datetime
 from rest_framework.exceptions import ValidationError, APIException, NotAcceptable, AuthenticationFailed
 from rest_framework.serializers import Serializer, CharField, ModelSerializer
@@ -87,7 +88,7 @@ class ActivationSerializer(Serializer):
         if activation.expiration and activation.expiration < datetime.now(tz=pytz.UTC):
             raise NoContentException(detail={'details': 'expired_code'}, code='expired_code')
 
-        if data['activation_code'] == activation.activation_code:
+        if check_password(data['activation_code'], activation.activation_code):
             return True, user
 
         raise ValidationError(detail='Invalid activation code', code='invalid_code')
