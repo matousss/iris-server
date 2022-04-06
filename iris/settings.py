@@ -13,6 +13,8 @@ import os.path
 from datetime import timedelta
 from os import getenv
 from pathlib import Path
+
+from django.utils.timezone import localtime
 from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -39,9 +41,9 @@ INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
-    'django.contrib.sessions',
+    # 'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
+    # 'django.contrib.staticfiles',
 
     # 3-rd party
     'channels',
@@ -151,10 +153,10 @@ REST_KNOX = {
     'SECURE_HASH_ALGORITHM': 'cryptography.hazmat.primitives.hashes.SHA512',
     'AUTH_TOKEN_CHARACTER_LENGTH': 64,
     'TOKEN_TTL': timedelta(hours=10),
-    'USER_SERIALIZER': 'knox.serializers.UserSerializer',
+    'USER_SERIALIZER': 'iris.users.serializers.UserSerializer',
     'TOKEN_LIMIT_PER_USER': None,
-    'AUTO_REFRESH': False,
-    'EXPIRY_DATETIME_FORMAT': 'yyyy/mm/dd',
+    'AUTO_REFRESH': True,
+   # 'EXPIRY_DATETIME_FORMAT': 'yyyy/mm/dd',
 }
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

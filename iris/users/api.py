@@ -91,33 +91,33 @@ class RegisterAPI(GenericAPIView):
         )
 
 
-class LoginAPI(GenericAPIView):
-    serializer_class = LoginSerializer
-    authentication_classes = ()
-    permission_classes = (AllowAny,)
-
-    ###
-    # request: {username, password}
-    # response:
-    #   200: {user, token}
-    #   204: User not found
-    #   401: Invalid password
-    # ###
-    def post(self, request, *args, **kwargs):
-        serializer: LoginSerializer
-        serializer = self.get_serializer(data=request.data)
-        try:
-            serializer.is_valid(raise_exception=True)
-        except IrisUser.DoesNotExist:
-            raise NoContentException(detail='User not found', code='user_not_found')
-
-        success, user = serializer.validated_data
-        response_data = {
-            'user': UserSerializer(user, context=self.get_serializer_context()).data,
-            'token': AuthToken.objects.create(user)[1],
-        }
-
-        return Response(response_data)
+# class LoginAPI(GenericAPIView):
+#     serializer_class = LoginSerializer
+#     authentication_classes = ()
+#     permission_classes = (AllowAny,)
+#
+#     ###
+#     # request: {username, password}
+#     # response:
+#     #   200: {user, token}
+#     #   204: User not found
+#     #   401: Invalid password
+#     # ###
+#     def post(self, request, *args, **kwargs):
+#         serializer: LoginSerializer
+#         serializer = self.get_serializer(data=request.data)
+#         try:
+#             serializer.is_valid(raise_exception=True)
+#         except IrisUser.DoesNotExist:
+#             raise NoContentException(detail='User not found', code='user_not_found')
+#
+#         success, user = serializer.validated_data
+#         response_data = {
+#             'user': UserSerializer(user, context=self.get_serializer_context()).data,
+#             'token': AuthToken.objects.create(user)[1],
+#         }
+#
+#         return Response(response_data)
 
 
 class UserAPIView(RetrieveAPIView):
@@ -127,7 +127,6 @@ class UserAPIView(RetrieveAPIView):
         return self.request.user
 
 
-# todo user from token mby?
 class AccountActivationAPI(GenericAPIView):
     serializer_class = ActivationSerializer
     authentication_classes = ()
