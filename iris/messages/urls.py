@@ -2,6 +2,7 @@ from django.http import FileResponse
 from django.urls import re_path, path, include
 from rest_framework.routers import DefaultRouter
 
+from .consumers import MessageConsumer
 from .views import GetMedia
 from .api import ChannelViewSet, MessageViewSet
 
@@ -19,4 +20,5 @@ urlpatterns = [
 
 ws_urlpatterns = [
     # re_path(r'^ws/client/(?P<room_id>[^/]+)/$', ClientConsumer.as_asgi()),
+    re_path(r'ws/messages', MessageConsumer.as_asgi())
 ]

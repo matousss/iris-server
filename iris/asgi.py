@@ -13,6 +13,7 @@ from channels.auth import AuthMiddlewareStack
 from channels.routing import ProtocolTypeRouter, URLRouter
 from django.core.asgi import get_asgi_application
 from .messages.urls import ws_urlpatterns
+from .middleware import ChannelsAuthMiddleware
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'iris.settings')
 
@@ -20,7 +21,7 @@ application = ProtocolTypeRouter(
     {
         'http': get_asgi_application(),
         "websocket":
-            AuthMiddlewareStack(
+            ChannelsAuthMiddleware(
                 URLRouter(
                     ws_urlpatterns
                 )
