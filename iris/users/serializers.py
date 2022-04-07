@@ -74,7 +74,6 @@ class ActivationSerializer(Serializer):
             user = IrisUser.objects.get(username=data['username'])
         except IrisUser.DoesNotExist:
             raise NotAcceptable(detail={'user': 'not_found'})
-        success = False
         ###
         # Test pozornosti:
         #   otevřete: https://docs.google.com/forms/d/1yRFpxVO_MCHfLbWnaoeWMDehMHMvRQc3dok562nNT8M
