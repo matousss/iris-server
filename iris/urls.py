@@ -20,4 +20,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('iris.users.urls')),
     path('', include('iris.messages.urls')),
+    path('', include('iris.profiles.urls')),
 ]

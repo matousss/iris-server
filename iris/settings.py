@@ -41,9 +41,9 @@ INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
-    # 'django.contrib.sessions',
+    'django.contrib.sessions',
     'django.contrib.messages',
-    # 'django.contrib.staticfiles',
+    'django.contrib.staticfiles',
 
     # 3-rd party
     'channels',
@@ -51,7 +51,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'knox',
 
-    # production
+    # iris
     'iris.users',
     'iris.messages',
     'iris.profiles',
