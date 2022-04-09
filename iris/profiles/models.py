@@ -1,3 +1,5 @@
+import os
+
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
@@ -6,7 +8,7 @@ from django.db.models import OneToOneField, Model, ManyToManyField, FileField, C
 
 def avatar_file_path(instance, file):
     s = file.split(".")
-    return f'{settings.MEDIA_DIR}/users/{instance.user.id}/avatar'  # + ('.' + s[-1]) if len(s) > 1 else ""
+    return fr'{settings.MEDIA_DIR}\users\{instance.user.id}\avatar' + (('.' + s[-1]) if len(s) > 1 else "")
 
 
 class Profile(Model):

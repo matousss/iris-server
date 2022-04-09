@@ -1,3 +1,5 @@
+import glob
+import imghdr
 import os
 from mimetypes import guess_type
 
@@ -17,21 +19,10 @@ router.register(r'channel', ChannelViewSet, basename='channel')
 router.register(r'message', MessageViewSet, basename='message')
 router.register(r'message', MessageViewSet, basename='message')
 
-
-def get_media(request, fpath):
-    user = authenticate(request)
-    p = settings.BASE_DIR.joinpath(f'{settings.MEDIA_DIR}').joinpath(fpath)
-    if os.path.exists(p) and os.path.isfile(p):
-        return FileResponse(open(p, 'rb'), content_type=guess_type(fpath.split('/')[-1])[0])
-
-    return HttpResponseNotFound()
-
-
 urlpatterns = [
     # path('media/<str:channel_id>/<str:message_id>/<str:file>', GetMedia.as_view()),
     # path('api/channel/<uuid:channel_id>', ChannelAPIView.as_view()),
     # path('api/channel', GetChannelsAPI.as_view()),
-    re_path('media/(?P<fpath>.*)', get_media),
     path('api/', include(router.urls))
 ]
 

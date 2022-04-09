@@ -1,19 +1,21 @@
+import uuid
+
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.db import models
 
 # Create your models here.
-from django.db.models import CharField, EmailField, Model, OneToOneField, IntegerField, DateTimeField
+from django.db.models import CharField, EmailField, Model, OneToOneField, IntegerField, DateTimeField, UUIDField
 
 
 class IrisUser(AbstractUser):
+    id = UUIDField(primary_key=True, default=uuid.uuid4)
     email = EmailField(unique=True)
 
     REQUIRED_FIELDS = [
         'email'
     ]
-    pass
 
 
 class AccountActivation(Model):

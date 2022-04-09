@@ -1,5 +1,5 @@
 - model: iris_users.irisuser
-  pk: 1
+  pk: c0fb9475-cf8b-46d7-bd99-99dfffa783ef
   fields:
     password: pbkdf2_sha256$320000$DAAlhPNkMGp79pdOHwv0kv$rHIy/ia91vi1sCWoh13aamLpXnkQOvxuVQj32x0OEqo=
     last_login: null
@@ -14,7 +14,7 @@
     groups: []
     user_permissions: []
 - model: iris_users.irisuser
-  pk: 2
+  pk: e8de6f62-4148-4f72-9453-fdbbf921d286
   fields:
     password: pbkdf2_sha256$320000$5PUeK6tWZBJTVhSwd8aacd$MNLYXObWVfku2V6NdbL6zNaUuRnvGtR0pUp4VY4YQR8=
     last_login: 2022-03-23 18:37:35.385048+00:00
@@ -34,6 +34,6 @@
   pk: 031b7ac3c6db1acae4499efb014d351856bce4a7a001f02540a98dbd8b2655a9001060bdf65ec02961496482b28e111815d50781a0616bbda6efa072ae448e6f
   fields:
     token_key: 4166013a
-    user: 1
+    user: c0fb9475-cf8b-46d7-bd99-99dfffa783ef
     created: 2022-03-23 18:37:48.888509+00:00
     expiry: 2222-02-22 22:22:22+00:00
