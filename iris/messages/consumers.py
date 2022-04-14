@@ -7,6 +7,9 @@ knoxAuth = TokenAuthentication()
 
 class MessageConsumer(WebsocketConsumer):
     def connect(self):
+        if self.scope['user'].is_anonymous:
+            self.close()
+            return
         # print(self.scope)
         # async_to_sync(self.channel_layer.group_add)(
         #     self.room_id + '_cinema',
@@ -15,4 +18,6 @@ class MessageConsumer(WebsocketConsumer):
 
         # user, auth_token = knoxAuth.authenticate_credentials()
         # self.scope['user'] = user
+
         self.accept()
+        print('connected')

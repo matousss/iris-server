@@ -83,7 +83,10 @@ class MessageViewSet(mixins.CreateModelMixin,
     serializer_class = MessageSerializer
 
     def get_queryset(self):
-        return Message.objects.filter(channel__in=Channel.objects.filter(users__exact=self.request.user))
+        return Message.objects.filter(
+            channel__in=Channel.objects.filter(users__exact=self.request.user)
+        ).order_by('-creation')
+
 
     def filter_queryset(self, queryset):
         try:

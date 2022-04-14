@@ -1,6 +1,6 @@
 import imghdr
 import os.path
-from os import path, mkdir, rename, remove
+from os import path, makedirs, remove
 
 from PIL import Image
 from django.conf import settings
@@ -19,7 +19,7 @@ from .serializers import ProfileSerializer, AvatarUpdateSerializer
 TEMP_DIR = path.join(os.path.realpath(settings.MEDIA_DIR), 'temp')
 
 if not path.exists(TEMP_DIR):
-    mkdir(TEMP_DIR)
+    makedirs(TEMP_DIR)
 
 
 class ProfileViewAPI(RetrieveModelMixin, GenericViewSet):
@@ -51,7 +51,7 @@ class AvatarUpdateAPI(GenericAPIView):
         relative = path.join('users', str(request.user.id))
         p = path.join(path.realpath(settings.MEDIA_DIR), relative)
         if not path.exists(p):
-            mkdir(p)
+            makedirs(p)
         p = path.join(p, 'avatar')
 
         # todo select area

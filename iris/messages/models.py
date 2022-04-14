@@ -32,11 +32,14 @@ class Message(Model):
     id = UUIDField(primary_key=True, default=uuid4, editable=False)
     author = ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=SET_NULL)
     creation = DateTimeField(blank=False, null=False, auto_now_add=True, editable=False)
-    channel = ForeignKey('iris_messages.Channel', blank=False, null=False, on_delete=CASCADE)
-    text = TextField(null=True, blank=False)
-    media = BooleanField(default=False, null=False, blank=False)
+    channel = ForeignKey('Channel', blank=False, null=False, on_delete=CASCADE)
+    text = TextField(null=True, blank=True, default=None)
+    media = BooleanField(default=False, null=False)
 
     def clean(self):
+        if self.text == '':
+            self.text = None
         if self.text is None and self.media is False:
             raise ValidationError('text and media can\'t be None and False at same time')
+
         super().clean()
