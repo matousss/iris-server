@@ -5,6 +5,7 @@ from datetime import timedelta
 import pytz
 from django.conf import settings
 from django.contrib.auth import get_user_model, authenticate
+from django.contrib.auth.hashers import check_password, make_password, get_hasher, identify_hasher
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import get_template
 from django.utils.datetime_safe import datetime
@@ -43,19 +44,19 @@ from ..exceptions import NoContentException
 def init_activation(user, *, save=False):
     activation_code = ''.join(random.choice(string.digits) for _ in range(6))
     expiration = datetime.now(tz=pytz.UTC) + timedelta(hours=12)
-    activation, get = AccountActivation.objects.get_or_create(
+    encoded = make_password(activation_code)
+    activation, created = AccountActivation.objects.get_or_create(
         user=user,
         defaults={
-            'activation_code': activation_code,
+            'activation_code': encoded,
             'expiration': expiration,
         }
     )
-    if get:
-        activation.activation_code = activation_code
+    if not created:
+        activation.activation_code = encoded
         activation.expiration = expiration
-    if save:
+    if save is True:
         activation.save()
-
     return activation, activation_code
 
 
@@ -90,12 +91,12 @@ class RegisterAPI(GenericAPIView):
 
         activation.save()
         send_activation_email(user.email, activation_code)
-        # token = AuthToken.objects.create(user)
+        # token = AuthToken.objects.create(user)[1]
 
         return Response(
             {
                 'user': UserSerializer(user, context=self.get_serializer_context()).data,
-                # 'token': token[1]
+                # 'token': token
             }
         )
 
@@ -171,11 +172,11 @@ class AccountActivationAPI(GenericAPIView):
     authentication_classes = ()
     permission_classes = (AllowAny,)
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request):
         serializer = self.get_serializer(data=request.data)  # type: ActivationSerializer
         serializer.is_valid(raise_exception=True)
 
-        success, user = serializer.validated_data  # type: bool, IrisUser
+        user = serializer.validated_data  # type: bool, IrisUser
 
         user.is_active = True
         user.save()

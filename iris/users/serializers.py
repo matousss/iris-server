@@ -85,7 +85,7 @@ class ActivationSerializer(Serializer):
             raise NoContentException(detail={'details': 'expired_code'}, code='expired_code')
 
         if check_password(data['activation_code'], activation.activation_code):
-            return True, user
+            return user
 
         raise ValidationError(detail='Invalid activation code', code='invalid_code')
 
