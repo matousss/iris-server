@@ -13,7 +13,7 @@ from ..exceptions import NoContentException
 class UserSerializer(ModelSerializer):
     class Meta:
         model = IrisUser
-        fields = ('username', 'email')
+        fields = ('id', 'username', 'email')
 
 
 class RegisterSerializer(ModelSerializer):
@@ -30,9 +30,6 @@ class RegisterSerializer(ModelSerializer):
             is_active=False
         )
         return user
-
-
-
 
 
 class LoginSerializer(Serializer):
@@ -54,7 +51,7 @@ class LoginSerializer(Serializer):
                 raise APIException(detail='User not found', code='user_not_found')
             raise AuthenticationFailed(detail={'details': 'invalid_user'})
 
-        return (True, user)
+        return user
         # raise ValidationError('Password or Username is invalid')
 
 
@@ -91,3 +88,4 @@ class ActivationSerializer(Serializer):
             return True, user
 
         raise ValidationError(detail='Invalid activation code', code='invalid_code')
+
