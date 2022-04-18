@@ -74,11 +74,20 @@ class MessageSerializer(ModelSerializer):
         fields = ('id', 'author', 'text', 'creation', 'media', 'channel')
 
     def create(self, validated_data):
-        user = self.context['request'].user
+        user = self.get_user()
         channel = validated_data['channel']  # type: Channel
         if user not in channel.users.all():
             raise PermissionDenied()
         return Message.objects.create(author=user, **validated_data)
+
+    def get_user(self):
+        try:
+            return self.context['user']
+        except KeyError:
+            try:
+                return self.context['request'].user
+            except KeyError:
+                raise ValidationError(detail='User not provided', code='no_user')
 
     def validate(self, attrs):
         def get_att(name):
@@ -90,7 +99,8 @@ class MessageSerializer(ModelSerializer):
                 code='no_text_or_media')
 
         r = super(MessageSerializer, self).validate(attrs)
-        if self.context['request'].user not in r['channel'].users.all():
+        user = self.get_user()
+        if user not in r['channel'].users.all():
             raise PermissionDenied()
 
         return r

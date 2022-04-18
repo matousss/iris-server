@@ -22,9 +22,7 @@ class ChannelsTokenAuthMiddleware:
         # headers = dict(scope['headers'])
         query = parse_qs(scope['query_string'])
         # if b'authorization' in headers:
-        print(query)
         if b'token' in query:
-            print('jajx')
             try:
                 # token_name, token_key = headers[b'authorization'].split()
                 # print(token_key)
@@ -40,7 +38,6 @@ class ChannelsTokenAuthMiddleware:
                 scope['user'] = AnonymousUser()
         else:
             scope['user'] = AnonymousUser()
-
         return await self.inner(scope, receive, send)
 
 

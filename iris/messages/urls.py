@@ -28,5 +28,5 @@ urlpatterns = [
 
 ws_urlpatterns = [
     # re_path(r'^ws/client/(?P<room_id>[^/]+)/$', ClientConsumer.as_asgi()),
-    re_path(r'api/messages', MessageConsumer.as_asgi())
+    re_path(r'ws/messages', MessageConsumer.as_asgi())
 ]
