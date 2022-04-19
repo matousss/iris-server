@@ -1,16 +1,14 @@
 from urllib.parse import parse_qs
 
-import knox
 from asgiref.sync import sync_to_async
 from channels.auth import AuthMiddlewareStack
 from django.contrib.auth.models import AnonymousUser
 from django.db import close_old_connections
 from knox.auth import TokenAuthentication
+from rest_framework.exceptions import AuthenticationFailed
 
 # https://gist.github.com/rluts/22e05ed8f53f97bdd02eafdf38f3d60a
 # channels.auth.AuthMiddlewareStack
-from rest_framework.exceptions import AuthenticationFailed
-
 
 class ChannelsTokenAuthMiddleware:
     def __init__(self, inner):
