@@ -1,9 +1,11 @@
-from rest_framework.fields import FileField
+from rest_framework.fields import FileField, CharField
+from rest_framework.relations import SlugRelatedField
 from rest_framework.serializers import ModelSerializer, Serializer
 from .models import Profile
 
 
 class ProfileSerializer(ModelSerializer):
+    username = CharField(source='user.username')
     class Meta:
         model = Profile
         fields = '__all__'
@@ -17,3 +19,11 @@ class AvatarUpdateSerializer(Serializer):
 
     def create(self, validated_data):
         pass
+
+
+class ProfileMiniatureSerializer(ModelSerializer):
+    username = CharField(source='user.username')
+
+    class Meta:
+        model = Profile
+        fields = ('user', 'username', 'avatar')

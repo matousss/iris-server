@@ -10,11 +10,11 @@ from django.shortcuts import render
 # Create your views here.
 from rest_framework.exceptions import MethodNotAllowed
 from rest_framework.generics import GenericAPIView
-from rest_framework.mixins import RetrieveModelMixin, UpdateModelMixin
+from rest_framework.mixins import RetrieveModelMixin, UpdateModelMixin, ListModelMixin
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 from .models import Profile
-from .serializers import ProfileSerializer, AvatarUpdateSerializer
+from .serializers import ProfileSerializer, AvatarUpdateSerializer, ProfileMiniatureSerializer
 
 TEMP_DIR = path.join(os.path.realpath(settings.MEDIA_DIR), 'temp')
 
@@ -22,9 +22,22 @@ if not path.exists(TEMP_DIR):
     makedirs(TEMP_DIR)
 
 
-class ProfileViewAPI(RetrieveModelMixin, GenericViewSet):
+class AbstractProfileViewAPI(RetrieveModelMixin, GenericViewSet):
     queryset = Profile.objects.all()
+
+    def get_object(self):
+        if (self.kwargs['pk'] == 'current') and self.request.user:
+            return self.get_queryset().get(user=self.request.user)
+        return super(AbstractProfileViewAPI, self).get_object()
+
+
+
+class ProfileViewAPI(AbstractProfileViewAPI):
     serializer_class = ProfileSerializer
+
+
+class MiniProfileViewAPI(AbstractProfileViewAPI):
+    serializer_class = ProfileMiniatureSerializer
 
 
 class AvatarUpdateAPI(GenericAPIView):

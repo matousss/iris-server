@@ -6,10 +6,11 @@ from knox import settings
 from rest_framework.routers import DefaultRouter
 
 from .models import Profile
-from .views import ProfileViewAPI, AvatarUpdateAPI
+from .views import ProfileViewAPI, AvatarUpdateAPI, MiniProfileViewAPI
 
 router = DefaultRouter()
-router.register(r'profile', ProfileViewAPI, basename='profile')
+router.register(r'full', ProfileViewAPI, basename='profile_full')
+router.register(r'miniature', MiniProfileViewAPI, basename='profile_miniature')
 
 
 # def get_media(request, fpath):
@@ -35,7 +36,7 @@ def get_avatar(request, user_id):
 
 
 urlpatterns = [
-    path('api/', include(router.urls)),
+    path('api/profile/', include(router.urls)),
     path('api/avatar', AvatarUpdateAPI.as_view()),
     path('media/users/<uuid:user_id>/avatar', get_avatar)
 ]
