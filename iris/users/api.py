@@ -184,7 +184,7 @@ class AccountActivationAPI(GenericAPIView):
         AccountActivation.objects.get(user=user).delete()
 
         response_data = {
-            'user': UserSerializer(user, context=self.get_serializer_context()).data,
+            # 'user': UserSerializer(user, context=self.get_serializer_context()).data,
             'token': AuthToken.objects.create(user)[1],
         }
         return Response(response_data)
