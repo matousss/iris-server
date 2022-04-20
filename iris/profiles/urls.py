@@ -6,7 +6,7 @@ from knox import settings
 from rest_framework.routers import DefaultRouter
 
 from .models import Profile
-from .views import ProfileViewAPI, AvatarUpdateAPI, MiniProfileViewAPI
+from .api import ProfileViewAPI, AvatarUpdateAPI, MiniProfileViewAPI
 
 router = DefaultRouter()
 router.register(r'full', ProfileViewAPI, basename='profile_full')
