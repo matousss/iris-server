@@ -113,7 +113,7 @@ class LoginAuthentication(BasicAuthentication):
                 user = get_user_model().objects.all().get(**{get_user_model().USERNAME_FIELD: userid})
 
                 if not user.is_active:
-                    send_activation_email(user, init_activation(user, save=True)[1])
+                    send_activation_email(user.email, init_activation(user, save=True)[1])
                     e = AuthenticationFailed(_('User inactive.'))
                     e.status_code = 406
                     raise e
@@ -173,6 +173,7 @@ class AccountActivationAPI(GenericAPIView):
     permission_classes = (AllowAny,)
 
     def post(self, request):
+        print(request)
         serializer = self.get_serializer(data=request.data)  # type: ActivationSerializer
         serializer.is_valid(raise_exception=True)
 
