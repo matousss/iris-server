@@ -33,6 +33,7 @@ def message_update(sender, instance: Message, created=False, **kwargs):
 
 
 # todo disconnect on token invalidation
+# todo updated channels
 class MessageConsumer(WebsocketConsumer):
     def __init__(self, *args, **kwargs):
         super().__init__(args, kwargs)
