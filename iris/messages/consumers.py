@@ -9,28 +9,11 @@ from django.dispatch import receiver
 from django.utils.translation import gettext as _
 from rest_framework.exceptions import ValidationError
 
-from .models import Channel, Message
+from .models import Channel, Message, DirectChannel
 from .serializers import MessageSerializer
 
 
 # todo fix exceptions
-
-@receiver(post_save, sender=Message)
-def message_update(sender, instance: Message, created=False, **kwargs):
-    channel_layer = get_channel_layer()
-    data = MessageSerializer(instance).data
-    for k in data.keys():
-        if isinstance(data[k], UUID):
-            data[k] = str(data[k])
-
-    async_to_sync(channel_layer.group_send)(
-        str(instance.channel_id),
-        {
-            'type': 'updated.message',  # 'type': 'updated.message',
-            'message': json.dumps(data),
-        }
-    )
-
 
 # todo disconnect on token invalidation
 # todo updated channels
