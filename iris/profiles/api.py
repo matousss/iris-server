@@ -65,10 +65,10 @@ class AvatarUpdateAPI(GenericAPIView):
 
         # todo select area
         with Image.open(temp_path) as im:  # type: Image.Image
-            im.resize((512, 512)).save(p, 'PNG')
+            im.resize((512, 512)).save(p+'.png', 'PNG')
         remove(temp_path)
 
         profile = Profile.objects.get(user__exact=request.user)
-        profile.avatar = path.join('media', relative, 'avatar')
+        profile.avatar = path.join('media', relative, 'avatar.png')
         profile.save()
-        return Response(status=204)
+        return Response(status=200)

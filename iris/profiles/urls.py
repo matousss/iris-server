@@ -1,4 +1,5 @@
 import os
+from uuid import UUID
 
 from django.http import FileResponse, HttpResponseNotFound
 from django.urls import path, include
@@ -24,7 +25,7 @@ router.register(r'miniature', MiniProfileViewAPI, basename='profile_miniature')
 
 def get_avatar(request, user_id):
     try:
-        profile = Profile.objects.get(user_id__exact=user_id)
+        profile = Profile.objects.get(user_id__exact=UUID(user_id))
     except Profile.DoesNotExist:
         return HttpResponseNotFound()
     if profile.avatar:
@@ -38,5 +39,5 @@ def get_avatar(request, user_id):
 urlpatterns = [
     path('api/profile/', include(router.urls)),
     path('api/avatar', AvatarUpdateAPI.as_view()),
-    path('media/users/<uuid:user_id>/avatar', get_avatar)
+    path('media/users/<str:user_id>/avatar.png', get_avatar)
 ]
