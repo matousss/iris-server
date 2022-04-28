@@ -16,7 +16,7 @@ class DirectChannel(Channel):
 
 
 class GroupChannel(Channel):
-    name = TextField(max_length=256, blank=False, null=True)
+    name = TextField(max_length=32, blank=False, null=True)
     owner = ForeignKey(settings.AUTH_USER_MODEL, null=False, blank=False, on_delete=CASCADE, related_name='owner')
     admins = ManyToManyField(settings.AUTH_USER_MODEL, blank=True, related_name='admins')
 
