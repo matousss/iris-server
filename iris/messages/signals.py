@@ -25,6 +25,6 @@ def message_update(sender, instance: Message, **kwargs):
         str(instance.channel_id),
         {
             'type': 'updated.message',  # 'type': 'updated.message',
-            'message': json.dumps(data),
+            'message': data,
         }
     )

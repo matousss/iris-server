@@ -68,4 +68,4 @@ class MessageConsumer(WebsocketConsumer):
             self.close()
 
     def updated_message(self, event):
-        self.send(text_data=event['message'])
+        self.send(text_data=json.dumps({'type': 'message', 'data': event['message']}))
