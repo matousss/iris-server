@@ -55,7 +55,10 @@ class MessageConsumer(WebsocketConsumer):
                 self.error_to_front({'detail': _('JSON has invalid format'), 'type': str(type(e))})
                 return
 
-            serializer = MessageSerializer(data=data, context={'user': self.user})
+            if data['type'] != 'message':
+                self.error_to_front({'detail': _('Invalid type %s').format(data['type']), 'type': 'BadRequest'})
+
+            serializer = MessageSerializer(data=data['data'], context={'user': self.user})
             try:
                 serializer.is_valid(raise_exception=True)
             except ValidationError as e:
