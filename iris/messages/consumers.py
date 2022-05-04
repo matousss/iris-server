@@ -43,12 +43,13 @@ class MessageConsumer(WebsocketConsumer):
     def error_to_front(self, detail):
         self.send(
             text_data=json.dumps({
-                'error': detail,
+                'type': 'error',
+                'detail': detail
             })
         )
 
     def receive(self, text_data=None, bytes_data=None):
-        if False and text_data:
+        if text_data:
             try:
                 data = json.loads(text_data)
             except Exception as e:
@@ -57,7 +58,7 @@ class MessageConsumer(WebsocketConsumer):
 
             if data['type'] != 'message':
                 self.error_to_front({'detail': _('Invalid type %s').format(data['type']), 'type': 'BadRequest'})
-
+                return
             serializer = MessageSerializer(data=data['data'], context={'user': self.user})
             try:
                 serializer.is_valid(raise_exception=True)
