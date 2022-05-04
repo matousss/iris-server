@@ -9,6 +9,7 @@ from django.db.models import Model, UUIDField, ForeignKey, TextField, DateTimeFi
 class Channel(Model):
     id = UUIDField(primary_key=True, default=uuid4, editable=False)
     users = ManyToManyField(settings.AUTH_USER_MODEL, blank=False, related_name='channel_users')
+    last_opened = DateTimeField(blank=False, null=False, auto_now_add=True, editable=False)
 
 
 class DirectChannel(Channel):

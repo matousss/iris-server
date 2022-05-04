@@ -7,7 +7,7 @@ from .models import Channel, DirectChannel, GroupChannel, Message
 class DirectChannelSerializer(ModelSerializer):
     class Meta:
         model = DirectChannel
-        fields = ('id', 'users')
+        fields = '__all__'
 
     def validate(self, attrs):
         r = super(DirectChannelSerializer, self).validate(attrs)
@@ -28,7 +28,7 @@ class DirectChannelSerializer(ModelSerializer):
 class GroupChannelSerializer(ModelSerializer):
     class Meta:
         model = GroupChannel
-        fields = ('id', 'name', 'users', 'owner', 'admins')
+        fields = '__all__'
         read_only_fields = ('id', 'owner')
 
     def create(self, validated_data):
