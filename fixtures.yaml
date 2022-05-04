@@ -2,7 +2,7 @@
   pk: 69a5f2de-5340-441e-a77c-2b22ce70de79
   fields:
     password: pbkdf2_sha256$320000$RuziDff84QRcndfTJ5it1l$qR2mKG+RAE8MBXBLpLUdOgekIhRpyNsQoA8gQSPPrjI=
-    last_login: 2022-04-24 21:30:52.939670+00:00
+    last_login: 2022-05-04 17:14:01.856419+00:00
     is_superuser: false
     username: matousss
     first_name: ''
@@ -11,8 +11,8 @@
     is_active: true
     date_joined: 2022-04-24 21:29:47.774308+00:00
     email: matousss33@gmail.com
-    groups: [ ]
-    user_permissions: [ ]
+    groups: []
+    user_permissions: []
 - model: iris_users.irisuser
   pk: ba4b42c2-bf72-4f0f-8b02-1b995a7b9bdb
   fields:
@@ -26,13 +26,13 @@
     is_active: false
     date_joined: 2022-04-20 20:55:54.818712+00:00
     email: 01@test.te
-    groups: [ ]
-    user_permissions: [ ]
+    groups: []
+    user_permissions: []
 - model: iris_users.irisuser
   pk: c0fb9475-cf8b-46d7-bd99-99dfffa783ef
   fields:
     password: pbkdf2_sha256$320000$DAAlhPNkMGp79pdOHwv0kv$rHIy/ia91vi1sCWoh13aamLpXnkQOvxuVQj32x0OEqo=
-    last_login: 2022-04-28 18:14:43.654810+00:00
+    last_login: 2022-05-04 16:32:31.077453+00:00
     is_superuser: false
     username: user
     first_name: ''
@@ -41,8 +41,8 @@
     is_active: true
     date_joined: 2022-03-23 15:43:27.161487+00:00
     email: email@domain.globaldomain
-    groups: [ ]
-    user_permissions: [ ]
+    groups: []
+    user_permissions: []
 - model: iris_users.irisuser
   pk: e8de6f62-4148-4f72-9453-fdbbf921d286
   fields:
@@ -56,8 +56,8 @@
     is_active: true
     date_joined: 2022-03-23 15:45:02.981814+00:00
     email: admin@admin.admin
-    groups: [ ]
-    user_permissions: [ ]
+    groups: []
+    user_permissions: []
 - model: iris_users.irisuser
   pk: f1468d8c-a0c3-44ef-8eeb-d8e0ada157a8
   fields:
@@ -71,112 +71,66 @@
     is_active: false
     date_joined: 2022-04-20 17:48:52.788874+00:00
     email: test@test.te
-    groups: [ ]
-    user_permissions: [ ]
-- model: iris_users.accountactivation
-  pk: ba4b42c2-bf72-4f0f-8b02-1b995a7b9bdb
-  fields:
-    activation_code: pbkdf2_sha256$320000$X8wAXMbtubIk7SytPS6yN0$9PyOMgxFEx2If4F+S00W+40M5xcpP1wvaNvxDghhb0Q=
-    expiration: 2022-04-21 08:55:55.273560+00:00
-- model: iris_users.accountactivation
-  pk: f1468d8c-a0c3-44ef-8eeb-d8e0ada157a8
-  fields:
-    activation_code: pbkdf2_sha256$320000$nW89adJnQeB7vRbpZwS3s5$UMJvGT2KiOphbGZNYgbEQ26VzWXUqaBeg5bkJOtmdRk=
-    expiration: 2022-04-21 05:48:53.282046+00:00
+    groups: []
+    user_permissions: []
 - model: iris_messages.channel
   pk: 865593fd-9aab-4224-b9e7-516adf288f16
   fields:
+    last_opened: 2022-05-04 18:11:31.513705+00:00
     users:
-      - 69a5f2de-5340-441e-a77c-2b22ce70de79
-      - c0fb9475-cf8b-46d7-bd99-99dfffa783ef
+    - 69a5f2de-5340-441e-a77c-2b22ce70de79
+    - c0fb9475-cf8b-46d7-bd99-99dfffa783ef
 - model: iris_messages.channel
   pk: bd4dd160-53e9-4b08-a218-ae2eecba4832
   fields:
+    last_opened: 2022-05-04 18:11:31.513705+00:00
     users:
-      - ba4b42c2-bf72-4f0f-8b02-1b995a7b9bdb
-      - c0fb9475-cf8b-46d7-bd99-99dfffa783ef
+    - ba4b42c2-bf72-4f0f-8b02-1b995a7b9bdb
+    - c0fb9475-cf8b-46d7-bd99-99dfffa783ef
 - model: iris_messages.channel
   pk: d1f8318a-513a-4948-a915-bbc8e4b32cfc
   fields:
+    last_opened: 2022-05-04 18:11:31.513705+00:00
     users:
-      - 69a5f2de-5340-441e-a77c-2b22ce70de79
-      - e8de6f62-4148-4f72-9453-fdbbf921d286
+    - 69a5f2de-5340-441e-a77c-2b22ce70de79
+    - e8de6f62-4148-4f72-9453-fdbbf921d286
 - model: iris_messages.channel
   pk: ddb14e81-737d-4a0d-bddf-58fa481282a2
   fields:
+    last_opened: 2022-05-04 18:11:31.513705+00:00
     users:
-      - 69a5f2de-5340-441e-a77c-2b22ce70de79
-      - ba4b42c2-bf72-4f0f-8b02-1b995a7b9bdb
-      - c0fb9475-cf8b-46d7-bd99-99dfffa783ef
-      - e8de6f62-4148-4f72-9453-fdbbf921d286
-      - f1468d8c-a0c3-44ef-8eeb-d8e0ada157a8
+    - 69a5f2de-5340-441e-a77c-2b22ce70de79
+    - ba4b42c2-bf72-4f0f-8b02-1b995a7b9bdb
+    - c0fb9475-cf8b-46d7-bd99-99dfffa783ef
+    - e8de6f62-4148-4f72-9453-fdbbf921d286
+    - f1468d8c-a0c3-44ef-8eeb-d8e0ada157a8
 - model: iris_messages.channel
   pk: f1c3dab9-26eb-4871-812c-f0c17f2deb5e
   fields:
+    last_opened: 2022-05-04 18:11:31.513705+00:00
     users:
-      - c0fb9475-cf8b-46d7-bd99-99dfffa783ef
-      - e8de6f62-4148-4f72-9453-fdbbf921d286
+    - c0fb9475-cf8b-46d7-bd99-99dfffa783ef
+    - e8de6f62-4148-4f72-9453-fdbbf921d286
 - model: iris_messages.directchannel
   pk: 865593fd-9aab-4224-b9e7-516adf288f16
-  fields: { }
+  fields: {}
 - model: iris_messages.directchannel
   pk: bd4dd160-53e9-4b08-a218-ae2eecba4832
-  fields: { }
+  fields: {}
 - model: iris_messages.directchannel
   pk: d1f8318a-513a-4948-a915-bbc8e4b32cfc
-  fields: { }
+  fields: {}
 - model: iris_messages.directchannel
   pk: f1c3dab9-26eb-4871-812c-f0c17f2deb5e
-  fields: { }
+  fields: {}
 - model: iris_messages.groupchannel
   pk: ddb14e81-737d-4a0d-bddf-58fa481282a2
   fields:
     name: negr
     owner: 69a5f2de-5340-441e-a77c-2b22ce70de79
     admins:
-      - e8de6f62-4148-4f72-9453-fdbbf921d286
-      - f1468d8c-a0c3-44ef-8eeb-d8e0ada157a8
-- model: iris_messages.message
-  pk: 2015c209-80d1-4286-8dd8-afeae1f06f48
-  fields:
-    author: e8de6f62-4148-4f72-9453-fdbbf921d286
-    creation: 2022-04-14 12:51:03.526338+00:00
-    channel: bd4dd160-53e9-4b08-a218-ae2eecba4832
-    text: null
-    media: true
-- model: iris_messages.message
-  pk: 41c672d0-6527-451f-b770-2fd2f9814621
-  fields:
-    author: c0fb9475-cf8b-46d7-bd99-99dfffa783ef
-    creation: 2022-04-14 12:26:30.280146+00:00
-    channel: bd4dd160-53e9-4b08-a218-ae2eecba4832
-    text: ahoj
-    media: false
-- model: iris_messages.message
-  pk: 6d7aa3a5-c63f-45f2-bd2d-baa0b281cbc1
-  fields:
-    author: 69a5f2de-5340-441e-a77c-2b22ce70de79
-    creation: 2022-04-24 22:07:23.575031+00:00
-    channel: ddb14e81-737d-4a0d-bddf-58fa481282a2
-    text: nazdár
-    media: false
-- model: iris_messages.message
-  pk: 7b717853-3922-43da-816f-9f03cece1dfc
-  fields:
-    author: 69a5f2de-5340-441e-a77c-2b22ce70de79
-    creation: 2022-04-24 22:09:00.645186+00:00
-    channel: ddb14e81-737d-4a0d-bddf-58fa481282a2
-    text: jknjnjknmjknjk
-    media: false
-- model: iris_messages.message
-  pk: b5c9ba28-e43c-489e-bdb6-f25386bf8ea7
-  fields:
-    author: e8de6f62-4148-4f72-9453-fdbbf921d286
-    creation: 2022-04-14 12:48:44.995873+00:00
-    channel: bd4dd160-53e9-4b08-a218-ae2eecba4832
-    text: null
-    media: true
-
+    - e8de6f62-4148-4f72-9453-fdbbf921d286
+    - f1468d8c-a0c3-44ef-8eeb-d8e0ada157a8
 
 # 4166013a157f53b0a087e31c62b14ea2374538bf231f675c506e598783a8a855
 - model: knox.authtoken
