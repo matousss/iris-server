@@ -177,7 +177,7 @@ class AccountActivationAPI(GenericAPIView):
         serializer = self.get_serializer(data=request.data)  # type: ActivationSerializer
         serializer.is_valid(raise_exception=True)
 
-        user = serializer.validated_data  # type: bool, IrisUser
+        user = serializer.validated_data  # type: IrisUser
 
         user.is_active = True
         user.save()
