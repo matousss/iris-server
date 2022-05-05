@@ -34,7 +34,7 @@ class Message(Model):
     author = ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=SET_NULL)
     creation = DateTimeField(blank=False, null=False, auto_now_add=True, editable=False)
     channel = ForeignKey('Channel', blank=False, null=False, on_delete=CASCADE)
-    text = TextField(null=True, blank=True, default=None)
+    text = TextField(null=True, blank=True, default=None, max_length=255)
     media = BooleanField(default=False, null=False)
 
     def clean(self):
