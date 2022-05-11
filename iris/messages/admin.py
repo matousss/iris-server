@@ -10,10 +10,12 @@ register = admin.site.register
 
 class GroupChannelAdmin(ModelAdmin):
     list_display = ['id', 'name']
+    readonly_fields = ['last_open_by']
 
 
 class DirectChannelAdmin(ModelAdmin):
     list_display = ['id']
+    readonly_fields = ['last_open_by']
 
 
 class MessageAdmin(ModelAdmin):

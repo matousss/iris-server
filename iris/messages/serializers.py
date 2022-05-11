@@ -1,4 +1,5 @@
 from rest_framework.exceptions import ValidationError, PermissionDenied, APIException
+from rest_framework.fields import DateTimeField
 from rest_framework.serializers import ModelSerializer, Serializer
 
 from .models import Channel, DirectChannel, GroupChannel, Message
@@ -104,3 +105,13 @@ class MessageSerializer(ModelSerializer):
             raise PermissionDenied()
 
         return r
+
+
+class DateTimeSerializer(Serializer):
+    def update(self, instance, validated_data):
+        pass
+
+    def create(self, validated_data):
+        pass
+
+    datetime = DateTimeField()
