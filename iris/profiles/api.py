@@ -5,6 +5,7 @@ from os import path, makedirs, remove
 from PIL import Image
 from django.conf import settings
 from django.core.files.uploadedfile import InMemoryUploadedFile
+from rest_framework.filters import SearchFilter
 from rest_framework.generics import GenericAPIView
 from rest_framework.mixins import RetrieveModelMixin, UpdateModelMixin, ListModelMixin
 from rest_framework.response import Response
@@ -18,14 +19,15 @@ if not path.exists(TEMP_DIR):
     makedirs(TEMP_DIR)
 
 
-class AbstractProfileViewAPI(RetrieveModelMixin, GenericViewSet):
+class AbstractProfileViewAPI(RetrieveModelMixin, GenericViewSet, ListModelMixin):
     queryset = Profile.objects.all()
+    filter_backends = [SearchFilter]
+    search_fields = ['user__username', 'user__email']
 
     def get_object(self):
         if (self.kwargs['pk'] == 'current') and self.request.user:
             return self.get_queryset().get(user=self.request.user)
         return super(AbstractProfileViewAPI, self).get_object()
-
 
 
 class ProfileViewAPI(AbstractProfileViewAPI):
@@ -65,7 +67,7 @@ class AvatarUpdateAPI(GenericAPIView):
 
         # todo select area
         with Image.open(temp_path) as im:  # type: Image.Image
-            im.resize((512, 512)).save(p+'.png', 'PNG')
+            im.resize((512, 512)).save(p + '.png', 'PNG')
         remove(temp_path)
 
         profile = Profile.objects.get(user__exact=request.user)
