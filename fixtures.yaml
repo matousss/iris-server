@@ -126,7 +126,7 @@
 - model: iris_messages.groupchannel
   pk: ddb14e81-737d-4a0d-bddf-58fa481282a2
   fields:
-    name: negr
+    name: bad joke
     owner: 69a5f2de-5340-441e-a77c-2b22ce70de79
     admins:
     - e8de6f62-4148-4f72-9453-fdbbf921d286
