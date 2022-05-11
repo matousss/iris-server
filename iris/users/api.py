@@ -20,8 +20,7 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 
 from .models import AccountActivation, IrisUser
-from .serializers import RegisterSerializer, UserSerializer, LoginSerializer, ActivationSerializer
-from ..exceptions import NoContentException
+from .serializers import RegisterSerializer, UserSerializer, ActivationSerializer
 
 
 # def validation_error_response(serializer: Serializer) -> Optional[Response]:
