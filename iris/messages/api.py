@@ -1,21 +1,24 @@
 from uuid import UUID
 
+from django.http import Http404
+from django.utils import timezone
 from django.utils.datastructures import MultiValueDictKeyError
 from rest_framework import mixins
-from rest_framework.exceptions import ValidationError, MethodNotAllowed
+from rest_framework.exceptions import ValidationError
+from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 from rest_framework.serializers import ModelSerializer
 from rest_framework.status import HTTP_201_CREATED
-from rest_framework.viewsets import ModelViewSet, GenericViewSet
+from rest_framework.viewsets import GenericViewSet
 
 from .models import Channel, Message
-from .serializers import MessageSerializer, AllChannelSerializer
+from .serializers import MessageSerializer, AllChannelSerializer, DateTimeSerializer
 
 
 class ChannelViewSet(mixins.CreateModelMixin,
                      # mixins.RetrieveModelMixin,
                      mixins.UpdateModelMixin,
-                     mixins.DestroyModelMixin, # lol klidně ať si to smažou
+                     mixins.DestroyModelMixin,  # lol klidně ať si to smažou
                      mixins.ListModelMixin,
                      GenericViewSet):
     serializer_class = AllChannelSerializer
@@ -87,7 +90,6 @@ class MessageViewSet(mixins.CreateModelMixin,
             channel__in=Channel.objects.filter(users__exact=self.request.user)
         ).order_by('-creation')
 
-
     def filter_queryset(self, queryset):
         try:
             channel_id = UUID(self.request.GET['channel'])
@@ -104,3 +106,20 @@ class MessageViewSet(mixins.CreateModelMixin,
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=HTTP_201_CREATED, headers=headers)
+
+
+
+class ViewedChannelAPI(GenericAPIView):
+    def patch(self, request, *, channel_id):
+        try:
+            channel = Channel.objects.get(id__exact=channel_id)  # type: Channel
+        except Channel.DoesNotExist:
+            raise Http404()
+
+        # just to make sure it's possible to safely retrieve back datetime form
+        dt_serializer = DateTimeSerializer(data={'datetime': timezone.now()})
+        dt_serializer.is_valid(True)
+        channel.last_open_by[str(request.user.id)] = dt_serializer.data['datetime']
+        channel.save()
+
+        return Response()
