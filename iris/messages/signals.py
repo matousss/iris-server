@@ -14,7 +14,7 @@ from .serializers import MessageSerializer
 
 
 @receiver(post_save, sender=Message)
-def message_update(_, instance: Message, **kwargs):
+def message_update(sender, instance: Message, **kwargs):
     channel_layer = get_channel_layer()
     data = MessageSerializer(instance).data
     for k in data.keys():
@@ -25,6 +25,6 @@ def message_update(_, instance: Message, **kwargs):
         str(instance.channel_id),
         {
             'type': 'updated.message',  # 'type': 'updated.message',
-            'message': json.dumps(data),
+            'message': data,
         }
     )

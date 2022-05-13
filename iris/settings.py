@@ -157,7 +157,7 @@ REST_KNOX = {
     'USER_SERIALIZER': 'iris.users.serializers.UserSerializer',
     'TOKEN_LIMIT_PER_USER': None,
     'AUTO_REFRESH': True,
-   # 'EXPIRY_DATETIME_FORMAT': 'yyyy/mm/dd',
+    # 'EXPIRY_DATETIME_FORMAT': 'yyyy/mm/dd',
 }
 
 CHANNEL_LAYERS = {
@@ -175,6 +175,9 @@ EMAIL_PORT = int(getenv('EMAIL_PORT'))
 EMAIL_HOST_USER = getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = getenv('EMAIL_HOST_PASSWORD')
 
-CORS_ORIGIN_WHITELIST = (
-    'http://localhost:3000',
-)
+# todo don't forgot to change this
+# CORS_ORIGIN_WHITELIST = (
+#     'http://localhost:3000',
+#     'http://0.0.0.0',
+# )
+CORS_ORIGIN_ALLOW_ALL = True

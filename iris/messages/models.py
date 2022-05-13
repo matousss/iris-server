@@ -1,14 +1,15 @@
+import datetime
 from uuid import uuid4
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db.models import Model, UUIDField, ForeignKey, TextField, DateTimeField, \
-    ManyToManyField, SET_NULL, CASCADE, BooleanField
-
+    ManyToManyField, SET_NULL, CASCADE, BooleanField, JSONField
 
 class Channel(Model):
     id = UUIDField(primary_key=True, default=uuid4, editable=False)
     users = ManyToManyField(settings.AUTH_USER_MODEL, blank=False, related_name='channel_users')
+    last_open_by = JSONField(blank=False, null=False, editable=False, default=dict)
 
 
 class DirectChannel(Channel):
@@ -33,7 +34,7 @@ class Message(Model):
     author = ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=SET_NULL)
     creation = DateTimeField(blank=False, null=False, auto_now_add=True, editable=False)
     channel = ForeignKey('Channel', blank=False, null=False, on_delete=CASCADE)
-    text = TextField(null=True, blank=True, default=None)
+    text = TextField(null=True, blank=True, default=None, max_length=255)
     media = BooleanField(default=False, null=False)
 
     def clean(self):

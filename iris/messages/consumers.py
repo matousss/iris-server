@@ -43,19 +43,23 @@ class MessageConsumer(WebsocketConsumer):
     def error_to_front(self, detail):
         self.send(
             text_data=json.dumps({
-                'error': detail,
+                'type': 'error',
+                'detail': detail
             })
         )
 
     def receive(self, text_data=None, bytes_data=None):
-        if False and text_data:
+        if text_data:
             try:
                 data = json.loads(text_data)
             except Exception as e:
                 self.error_to_front({'detail': _('JSON has invalid format'), 'type': str(type(e))})
                 return
 
-            serializer = MessageSerializer(data=data, context={'user': self.user})
+            if data['type'] != 'message':
+                self.error_to_front({'detail': _('Invalid type %s').format(data['type']), 'type': 'BadRequest'})
+                return
+            serializer = MessageSerializer(data=data['data'], context={'user': self.user})
             try:
                 serializer.is_valid(raise_exception=True)
             except ValidationError as e:
@@ -68,4 +72,4 @@ class MessageConsumer(WebsocketConsumer):
             self.close()
 
     def updated_message(self, event):
-        self.send(text_data=event['message'])
+        self.send(text_data=json.dumps({'type': 'message', 'data': event['message']}))

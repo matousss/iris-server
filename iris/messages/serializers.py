@@ -1,4 +1,5 @@
 from rest_framework.exceptions import ValidationError, PermissionDenied, APIException
+from rest_framework.fields import DateTimeField
 from rest_framework.serializers import ModelSerializer, Serializer
 
 from .models import Channel, DirectChannel, GroupChannel, Message
@@ -7,7 +8,7 @@ from .models import Channel, DirectChannel, GroupChannel, Message
 class DirectChannelSerializer(ModelSerializer):
     class Meta:
         model = DirectChannel
-        fields = ('id', 'users')
+        fields = '__all__'
 
     def validate(self, attrs):
         r = super(DirectChannelSerializer, self).validate(attrs)
@@ -28,7 +29,7 @@ class DirectChannelSerializer(ModelSerializer):
 class GroupChannelSerializer(ModelSerializer):
     class Meta:
         model = GroupChannel
-        fields = ('id', 'name', 'users', 'owner', 'admins')
+        fields = '__all__'
         read_only_fields = ('id', 'owner')
 
     def create(self, validated_data):
@@ -104,3 +105,13 @@ class MessageSerializer(ModelSerializer):
             raise PermissionDenied()
 
         return r
+
+
+class DateTimeSerializer(Serializer):
+    def update(self, instance, validated_data):
+        pass
+
+    def create(self, validated_data):
+        pass
+
+    datetime = DateTimeField()
