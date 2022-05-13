@@ -1,14 +1,17 @@
-from rest_framework.fields import FileField, CharField
+from rest_framework.fields import FileField, CharField, UUIDField
 from rest_framework.relations import SlugRelatedField
 from rest_framework.serializers import ModelSerializer, Serializer
 from .models import Profile
 
 
 class ProfileSerializer(ModelSerializer):
+    id = UUIDField(source='user.pk')
     username = CharField(source='user.username')
+    email = CharField(source='user.email')
+
     class Meta:
         model = Profile
-        fields = '__all__'
+        exclude = ['user']
 
 
 class AvatarUpdateSerializer(Serializer):
@@ -22,8 +25,9 @@ class AvatarUpdateSerializer(Serializer):
 
 
 class ProfileMiniatureSerializer(ModelSerializer):
+    id = UUIDField(source='user.pk')
     username = CharField(source='user.username')
 
     class Meta:
         model = Profile
-        fields = ('user', 'username', 'avatar')
+        fields = ('id', 'username', 'avatar')
