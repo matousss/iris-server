@@ -17,6 +17,7 @@ from .serializers import MessageSerializer
 
 # todo disconnect on token invalidation
 # todo updated channels
+# todo logout user on token deletion
 class MessageConsumer(WebsocketConsumer):
     def __init__(self, *args, **kwargs):
         super().__init__(args, kwargs)

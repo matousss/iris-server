@@ -30,6 +30,7 @@ class RegisterSerializer(ModelSerializer):
             is_active=False
         )
         return user
+    # ?todo some check if password is strong
 
 
 class LoginSerializer(Serializer):
@@ -55,7 +56,7 @@ class LoginSerializer(Serializer):
         # raise ValidationError('Password or Username is invalid')
 
 
-# todo user from token activate
+# ?todo user from token activate
 class ActivationSerializer(Serializer):
     def update(self, instance, validated_data):
         pass
@@ -89,3 +90,14 @@ class ActivationSerializer(Serializer):
 
         raise ValidationError(detail='Invalid activation code', code='invalid_code')
 
+
+class PasswordChangeSerializer(Serializer):
+    password = CharField()
+
+    def update(self, instance: IrisUser, validated_data):
+        instance.password = validated_data['password']
+        instance.save()
+
+    # ?todo some check if password is strong
+    def create(self, validated_data):
+        pass

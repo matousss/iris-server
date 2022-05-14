@@ -1,44 +1,27 @@
 import random
 import string
 from datetime import timedelta
-
 import pytz
 from django.conf import settings
-from django.contrib.auth import get_user_model, authenticate
-from django.contrib.auth.hashers import check_password, make_password, get_hasher, identify_hasher
+from django.contrib.auth import get_user_model, authenticate, user_logged_out
+from django.contrib.auth.hashers import make_password
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import get_template
 from django.utils.datetime_safe import datetime
 from django.utils.translation import gettext_lazy as _
 from knox.models import AuthToken
-from knox.views import LoginView
+from knox.views import LoginView, LogoutAllView as KnoxLogoutAllView
 from rest_framework.authentication import BasicAuthentication
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.generics import GenericAPIView, RetrieveAPIView
 from rest_framework.permissions import AllowAny
 from rest_framework.request import Request
 from rest_framework.response import Response
+from rest_framework.status import HTTP_202_ACCEPTED
 
 from .models import AccountActivation, IrisUser
-from .serializers import RegisterSerializer, UserSerializer, ActivationSerializer
+from .serializers import RegisterSerializer, UserSerializer, ActivationSerializer, PasswordChangeSerializer
 
-
-# def validation_error_response(serializer: Serializer) -> Optional[Response]:
-#     # noinspection PyBroadException
-#     try:
-#         serializer.is_valid(raise_exception=True)
-#
-#     except Exception:
-#         error_dict = {}
-#         for error in serializer.errors.keys():
-#             error_detail: ErrorDetail
-#             error_detail = serializer.errors[error][0]
-#             error_dict[error] = error_detail.code
-#         return Response({
-#             'result': 'error',
-#             'details': error_dict,
-#         })
-#     return None
 
 def init_activation(user, *, save=False):
     activation_code = ''.join(random.choice(string.digits) for _ in range(6))
@@ -100,7 +83,7 @@ class RegisterAPI(GenericAPIView):
         )
 
 
-class LoginAuthentication(BasicAuthentication):
+class PasswordAuthentication(BasicAuthentication):
     def authenticate_credentials(self, userid, password, request=None):
         credentials = {
             get_user_model().USERNAME_FIELD: userid,
@@ -126,37 +109,7 @@ class LoginAuthentication(BasicAuthentication):
 
 
 class LoginAPI(LoginView):
-    authentication_classes = (LoginAuthentication,)
-
-
-#
-# class LoginAPI(GenericAPIView):
-#     serializer_class = LoginSerializer
-#     authentication_classes = ()
-#     permission_classes = (AllowAny,)
-#
-#     ###
-#     # request: {username, password}
-#     # response:
-#     #   200: {user, token}
-#     #   204: User not found
-#     #   401: Invalid password
-#     # ###
-#     def post(self, request, *args, **kwargs):
-#         serializer: LoginSerializer
-#         serializer = self.get_serializer(data=request.data)
-#         try:
-#             serializer.is_valid(raise_exception=True)
-#         except IrisUser.DoesNotExist:
-#             raise NoContentException(detail='User not found', code='user_not_found')
-#
-#         user = serializer.validated_data
-#         response_data = {
-#             'user': UserSerializer(user, context=self.get_serializer_context()).data,
-#             'token': AuthToken.objects.create(user)[1],
-#         }
-#
-#         return Response(response_data)
+    authentication_classes = (PasswordAuthentication,)
 
 
 class UserAPIView(RetrieveAPIView):
@@ -193,3 +146,26 @@ class AccountActivationAPI(GenericAPIView):
 class TokenCheckAPI(GenericAPIView):
     def get(self, request):
         return Response(request.auth.expiry)
+
+
+class PasswordChangeAPI(GenericAPIView):
+    serializer_class = PasswordChangeSerializer
+    authentication_classes = (PasswordAuthentication, )
+
+    def post(self, request):
+        serializer = self.get_serializer(data=request.data) # type: PasswordChangeSerializer
+        serializer.is_valid(raise_exception=True)
+
+        serializer.update(request.user, serializer.validated_data)
+        # ?todo invalidate tokens
+
+
+class LogoutAllView(KnoxLogoutAllView):
+    def delete(self, *args, **kwargs):
+        return super(LogoutAllView, self).post(*args, **kwargs)
+
+    def post(self, request, format=None):
+        request.user.auth_token_set.all().exclude(pk__exact=request.auth.pk).delete()
+        user_logged_out.send(sender=request.user.__class__,
+                             request=request, user=request.user)
+        return Response(None, status=HTTP_202_ACCEPTED)

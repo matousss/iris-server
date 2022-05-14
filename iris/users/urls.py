@@ -2,7 +2,7 @@ import knox.urls
 import knox.views
 from django.urls import path, include
 
-from .api import RegisterAPI, UserAPIView, AccountActivationAPI, LoginAPI, TokenCheckAPI
+from .api import RegisterAPI, UserAPIView, AccountActivationAPI, LoginAPI, TokenCheckAPI, PasswordChangeAPI, LogoutAllView
 
 api_urls = [
     path('', include('knox.urls')),
@@ -11,6 +11,8 @@ api_urls = [
     path('user', UserAPIView.as_view()),
     path('activate', AccountActivationAPI.as_view()),
     path('check', TokenCheckAPI.as_view()),
+    path('check', PasswordChangeAPI.as_view()),
+    path('logoutall', LogoutAllView.as_view()),
 
 ]
 
