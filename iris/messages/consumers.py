@@ -38,7 +38,6 @@ class MessageConsumer(WebsocketConsumer):
             async_to_sync(self.channel_layer.group_add)(str(channel.id), self.channel_name)
 
         self.accept()
-        print('connected')
 
     def error_to_front(self, detail):
         self.send(
