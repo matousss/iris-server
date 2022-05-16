@@ -37,14 +37,15 @@ class MessageConsumer(WebsocketConsumer):
         self.user = self.scope['user']
         for channel in self.get_user_channels():
             async_to_sync(self.channel_layer.group_add)(str(channel.id), self.channel_name)
+        async_to_sync(self.channel_layer.group_add)(str(self.user.id), self.channel_name)
 
         self.accept()
 
     def error_to_front(self, detail):
         self.send(
             text_data=json.dumps({
-                'type': 'error',
-                'detail': detail
+                'object': 'error',
+                'data': {'detail': detail},
             })
         )
 
@@ -66,10 +67,12 @@ class MessageConsumer(WebsocketConsumer):
                 detail = e.detail
                 detail['type'] = ValidationError.__name__
                 self.error_to_front(detail)
+                print(e)
                 return
             serializer.save()
         else:
             self.close()
 
-    def updated_message(self, event):
-        self.send(text_data=json.dumps({'type': 'message', 'data': event['message']}))
+    def object_update(self, event):
+        print('lmao')
+        self.send(text_data=json.dumps({'object': event['object'], 'data': event['data']}))
