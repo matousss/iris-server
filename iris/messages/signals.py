@@ -3,33 +3,13 @@ from uuid import UUID
 
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
-from django.conf import Settings
-from django.conf.global_settings import AUTH_USER_MODEL
 from django.db.models import Model
 from django.db.models.signals import post_save, m2m_changed
 from django.dispatch import receiver
-from rest_framework.serializers import Serializer
 
 from .models import Channel, DirectChannel, Message, GroupChannel
 from .serializers import MessageSerializer, DirectChannelSerializer, GroupChannelSerializer
 
-
-# @receiver(post_save, sender=Message)
-# def message_update(sender, instance: Message, **kwargs):
-#     channel_layer = get_channel_layer()
-#     data = MessageSerializer(instance).data
-#     print('sedm')
-#     for k in data.keys():
-#         if isinstance(data[k], UUID):
-#             data[k] = str(data[k])
-#     print(data)
-#     async_to_sync(channel_layer.group_send)(
-#         str(instance.channel_id),
-#         {
-#             'type': 'updated.message',  # 'type': 'updated.message',
-#             'message': data,
-#         }
-#     )
 
 def object_update(sender, instance, serializer_class, get_listeners, **kwargs):
     channel_layer = get_channel_layer()
@@ -37,9 +17,7 @@ def object_update(sender, instance, serializer_class, get_listeners, **kwargs):
     for k in data.keys():
         if isinstance(data[k], UUID):
             data[k] = str(data[k])
-    print(data),
     channel = str(get_listeners(instance))
-    print(channel)
     async_to_sync(channel_layer.group_send)(
         channel,
         {
@@ -69,10 +47,11 @@ register_tracked_obj(GroupChannel, GroupChannelSerializer, instance_pk)
 @receiver(m2m_changed, sender=Channel.users.through)
 def user_relation_changed(*args, action, **kwargs):
     if action == 'post_add':
-        print('added')
+        # print('added')
+        pass
     elif action == 'post_remove':
-        print('post_remove')
+        # print('post_remove')
+        pass
     else:
         return
-    print(args)
-    print(kwargs)
+
