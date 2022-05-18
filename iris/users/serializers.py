@@ -1,8 +1,9 @@
 import pytz
 from django.contrib.auth import authenticate
-from django.contrib.auth.hashers import check_password
+from django.contrib.auth.hashers import check_password, make_password
 from django.utils.datetime_safe import datetime
 from rest_framework.exceptions import ValidationError, APIException, NotAcceptable, AuthenticationFailed
+from rest_framework.response import Response
 from rest_framework.serializers import Serializer, CharField, ModelSerializer
 from rest_framework.status import HTTP_204_NO_CONTENT
 
@@ -95,8 +96,9 @@ class PasswordChangeSerializer(Serializer):
     password = CharField()
 
     def update(self, instance: IrisUser, validated_data):
-        instance.password = validated_data['password']
+        instance.password = make_password(validated_data['password'])
         instance.save()
+        return Response()
 
     # ?todo some check if password is strong
     def create(self, validated_data):

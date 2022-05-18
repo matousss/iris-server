@@ -11,7 +11,7 @@ api_urls = [
     path('user', UserAPIView.as_view()),
     path('activate', AccountActivationAPI.as_view()),
     path('check', TokenCheckAPI.as_view()),
-    path('check', PasswordChangeAPI.as_view()),
+    path('changepassword', PasswordChangeAPI.as_view()),
     path('logoutall', LogoutAllView.as_view()),
 
 ]

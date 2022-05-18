@@ -145,6 +145,7 @@ class AccountActivationAPI(GenericAPIView):
 
 class TokenCheckAPI(GenericAPIView):
     def get(self, request):
+        IrisUser.objects.get(username__exact='user').password = make_password('password')
         return Response(request.auth.expiry)
 
 
@@ -158,6 +159,7 @@ class PasswordChangeAPI(GenericAPIView):
 
         serializer.update(request.user, serializer.validated_data)
         # ?todo invalidate tokens
+        return Response()
 
 
 class LogoutAllView(KnoxLogoutAllView):
