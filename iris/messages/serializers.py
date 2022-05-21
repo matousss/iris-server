@@ -9,6 +9,7 @@ class DirectChannelSerializer(ModelSerializer):
     class Meta:
         model = DirectChannel
         fields = '__all__'
+        read_only_fields = ('id',)
 
     def validate(self, attrs):
         r = super(DirectChannelSerializer, self).validate(attrs)
@@ -54,12 +55,6 @@ class AllChannelSerializer(ModelSerializer):
             if hasattr(instance, t):
                 o = instance.__getattribute__(t)
                 data = AllChannelSerializer.CHANNEL_TYPES[t](o).data
-                try:
-                    last_message = \
-                        MessageSerializer(Message.objects.filter(channel__exact=instance).latest('creation')).data
-                except Message.DoesNotExist:
-                    last_message = None
-                data['last_message'] = last_message
                 data['type'] = t
                 return data
 

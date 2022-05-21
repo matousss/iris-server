@@ -6,6 +6,7 @@ from django.core.exceptions import ValidationError
 from django.db.models import Model, UUIDField, ForeignKey, TextField, DateTimeField, \
     ManyToManyField, SET_NULL, CASCADE, BooleanField, JSONField
 
+
 class Channel(Model):
     id = UUIDField(primary_key=True, default=uuid4, editable=False)
     users = ManyToManyField(settings.AUTH_USER_MODEL, blank=False, related_name='channel_users')

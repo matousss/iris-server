@@ -16,21 +16,12 @@ from .serializers import MessageSerializer, AllChannelSerializer, DateTimeSerial
 
 
 class ChannelViewSet(mixins.CreateModelMixin,
-                     # mixins.RetrieveModelMixin,
                      mixins.UpdateModelMixin,
-                     mixins.DestroyModelMixin,  # lol klidně ať si to smažou
+                     mixins.DestroyModelMixin,
                      mixins.ListModelMixin,
                      GenericViewSet):
     serializer_class = AllChannelSerializer
     queryset = Channel.objects.all()
-
-    # get channel
-    # def get(self, request, *args, channel_id, **kwargs):
-    #     if not channel_id:
-    #         raise ValidationError(detail={'channel_id': 'required'})
-    #     channel = Channel.objects.get(id=channel_id)
-    #     serializer = self.get_serializer(channel)
-    #     return Response(serializer.data)
 
     @staticmethod
     def select_serializer(name):
@@ -70,12 +61,6 @@ class ChannelViewSet(mixins.CreateModelMixin,
     #     return MethodNotAllowed(method='PATCH')
 
 
-#
-# class GetChannelsAPI(ListAPIView):
-#     # return all channels user can view
-#     serializer_class = ChannelSerializer
-#     queryset = Channel.objects.all()
-
 
 class MessageViewSet(mixins.CreateModelMixin,
                      # mixins.RetrieveModelMixin, # asi není potřeba
@@ -106,7 +91,6 @@ class MessageViewSet(mixins.CreateModelMixin,
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=HTTP_201_CREATED, headers=headers)
-
 
 
 class ViewedChannelAPI(GenericAPIView):
