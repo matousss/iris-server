@@ -16,7 +16,6 @@ from .serializers import MessageSerializer
 # todo fix exceptions
 
 # todo disconnect on token invalidation
-# todo updated channels
 # todo logout user on token deletion
 class MessageConsumer(WebsocketConsumer):
     def __init__(self, *args, **kwargs):
@@ -30,9 +29,6 @@ class MessageConsumer(WebsocketConsumer):
         if self.scope['user'].is_anonymous:
             self.close()
             return
-
-        # user, auth_token = knoxAuth.authenticate_credentials()
-        # self.scope['user'] = user
 
         self.user = self.scope['user']
         for channel in self.get_user_channels():
@@ -74,5 +70,4 @@ class MessageConsumer(WebsocketConsumer):
             self.close()
 
     def object_update(self, event):
-        print('lmao')
         self.send(text_data=json.dumps({'object': event['object'], 'data': event['data']}))
