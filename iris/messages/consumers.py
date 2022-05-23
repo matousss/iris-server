@@ -68,5 +68,27 @@ class MessageConsumer(WebsocketConsumer):
         else:
             self.close()
 
+    def unsubscribe_channel(self, channel):
+        async_to_sync(self.channel_layer.group_discard)(channel, self.channel_name)
+
+    def send_update(self, data):
+        self.send(text_data=json.dumps({**data}))
+
     def object_update(self, event):
-        self.send(text_data=json.dumps({'object': event['object'], 'data': event['data']}))
+        self.send_update(event)
+
+    def object_delete(self, event):
+        if event['object'] == 'Channel':
+            self.unsubscribe_channel(event['id'])
+        self.send_update(event)
+
+    def add_channel(self, event):
+        async_to_sync(self.channel_layer.group_add)(event['channel'], self.channel_name)
+
+    def remove_channel(self, event):
+        self.unsubscribe_channel(event['channel'])
+        self.send_update({
+            'type': 'object.delete',
+            'id': event['channel'],
+            'object': 'Channel',
+        })
