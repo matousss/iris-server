@@ -1,4 +1,4 @@
-from rest_framework.fields import FileField, CharField, UUIDField
+from rest_framework.fields import FileField, CharField, UUIDField, ImageField
 from rest_framework.relations import SlugRelatedField
 from rest_framework.serializers import ModelSerializer, Serializer
 from .models import Profile
@@ -15,7 +15,7 @@ class ProfileSerializer(ModelSerializer):
 
 
 class AvatarUpdateSerializer(Serializer):
-    avatar = FileField()
+    avatar = ImageField()
 
     def update(self, instance, validated_data):
         pass

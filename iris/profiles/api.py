@@ -65,7 +65,6 @@ class AvatarUpdateAPI(GenericAPIView):
             makedirs(p)
         p = path.join(p, 'avatar')
 
-        # todo select area
         with Image.open(temp_path) as im:  # type: Image.Image
             im.resize((512, 512)).save(p + '.png', 'PNG')
         remove(temp_path)
