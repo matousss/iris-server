@@ -64,7 +64,7 @@ def instance_pk(instance):
 
 
 # also for deletion
-register_tracked_obj(Message, MessageSerializer, lambda instance: instance.channel_id)
+register_tracked_obj(Message, MessageSerializer, lambda instance: [str(instance.channel_id)])
 register_tracked_obj(Channel, AllChannelSerializer, instance_pk)
 register_tracked_obj(DirectChannel, DirectChannelSerializer, instance_pk)
 register_tracked_obj(GroupChannel, GroupChannelSerializer, instance_pk)
