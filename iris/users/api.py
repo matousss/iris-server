@@ -125,7 +125,6 @@ class AccountActivationAPI(GenericAPIView):
     permission_classes = (AllowAny,)
 
     def post(self, request):
-        print(request)
         serializer = self.get_serializer(data=request.data)  # type: ActivationSerializer
         serializer.is_valid(raise_exception=True)
 

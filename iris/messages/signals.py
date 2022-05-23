@@ -13,7 +13,10 @@ from .serializers import MessageSerializer, DirectChannelSerializer, GroupChanne
 
 def object_update(sender, instance, serializer_class, get_listeners, created, *args, **kwargs):
     channel_layer = get_channel_layer()
-    data = serializer_class(instance).data
+    try:
+        data = serializer_class(instance).data
+    except TypeError:
+        return
     for k in data.keys():
         if isinstance(data[k], UUID):
             data[k] = str(data[k])
@@ -21,9 +24,6 @@ def object_update(sender, instance, serializer_class, get_listeners, created, *a
             for i in range(len(data[k])):
                 if isinstance(data[k][i], UUID):
                     data[k][i] = str(data[k][i])
-
-    print(args)
-    print(kwargs)
 
     channel = str(get_listeners(instance))
     async_to_sync(channel_layer.group_send)(
@@ -43,7 +43,6 @@ def register_tracked_obj(sender: Type[Model], serializer_class, get_listeners):
 
 
 def instance_pk(instance):
-    print(instance)
     return instance.pk
 
 
@@ -52,7 +51,6 @@ register_tracked_obj(Message, MessageSerializer, lambda instance: instance.chann
 register_tracked_obj(Channel, AllChannelSerializer, instance_pk)
 register_tracked_obj(DirectChannel, DirectChannelSerializer, instance_pk)
 register_tracked_obj(GroupChannel, GroupChannelSerializer, instance_pk)
-
 
 
 @receiver(m2m_changed, sender=Channel.users.through)
@@ -65,4 +63,3 @@ def user_relation_changed(*args, action, **kwargs):
         pass
     else:
         return
-

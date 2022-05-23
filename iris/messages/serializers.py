@@ -58,7 +58,7 @@ class AllChannelSerializer(ModelSerializer):
                 data['type'] = t
                 return data
 
-        raise Exception("Invalid object type " + str(type(instance)))
+        raise TypeError("Object is missing supported child model")
 
     class Meta:
         fields = '__all__'

@@ -63,7 +63,6 @@ class MessageConsumer(WebsocketConsumer):
                 detail = e.detail
                 detail['type'] = ValidationError.__name__
                 self.error_to_front(detail)
-                print(e)
                 return
             serializer.save()
         else:
