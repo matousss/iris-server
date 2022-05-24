@@ -153,7 +153,7 @@ class PasswordChangeAPI(GenericAPIView):
     authentication_classes = (PasswordAuthentication, )
 
     def post(self, request):
-        serializer = self.get_serializer(data=request.data) # type: PasswordChangeSerializer
+        serializer = self.get_serializer(data=request.data)  # type: PasswordChangeSerializer
         serializer.is_valid(raise_exception=True)
 
         serializer.update(request.user, serializer.validated_data)
