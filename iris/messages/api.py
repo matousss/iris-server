@@ -77,7 +77,7 @@ class MessageViewSet(mixins.CreateModelMixin,
 
     def filter_queryset(self, queryset):
         try:
-            channel_id = UUID(self.request.GET['channel'])
+            channel_id = UUID(self.request.GET['channel_id'])
         except MultiValueDictKeyError:
             # raise ValidationError(detail={'channel_id': 'required'})
             return queryset
