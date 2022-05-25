@@ -8,7 +8,12 @@ from rest_framework.serializers import Serializer, CharField, ModelSerializer
 from rest_framework.status import HTTP_204_NO_CONTENT
 
 from .models import IrisUser, AccountActivation
-from ..exceptions import NoContentException
+
+
+class NoContentException(APIException):
+    status_code = HTTP_204_NO_CONTENT
+    default_code = 'no_content'
+    default_detail = 'Requested content no found'
 
 
 class UserSerializer(ModelSerializer):
