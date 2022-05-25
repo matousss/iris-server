@@ -36,11 +36,13 @@ class Message(Model):
     creation = DateTimeField(blank=False, null=False, auto_now_add=True, editable=False)
     channel = ForeignKey('Channel', blank=False, null=False, on_delete=CASCADE)
     text = TextField(null=True, blank=True, default=None, max_length=255)
-    media = CharField(default=None, null=True, blank=False, max_length=255)
+    media = CharField(default=None, null=True, blank=True, max_length=255)
 
     def clean(self):
         if self.text == '':
             self.text = None
+        if self.media == '':
+            self.media = None
         if self.text is None and self.media is False:
             raise ValidationError('text and media can\'t be None and False at same time')
 
