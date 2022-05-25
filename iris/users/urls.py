@@ -1,5 +1,3 @@
-import knox.urls
-import knox.views
 from django.urls import path, include
 
 from .api import RegisterAPI, AccountActivationAPI, LoginAPI, TokenCheckAPI, PasswordChangeAPI, LogoutAllView
