@@ -4,7 +4,7 @@ from uuid import uuid4
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db.models import Model, UUIDField, ForeignKey, TextField, DateTimeField, \
-    ManyToManyField, SET_NULL, CASCADE, BooleanField, JSONField
+    ManyToManyField, SET_NULL, CASCADE, BooleanField, JSONField, CharField
 
 
 class Channel(Model):
@@ -36,7 +36,7 @@ class Message(Model):
     creation = DateTimeField(blank=False, null=False, auto_now_add=True, editable=False)
     channel = ForeignKey('Channel', blank=False, null=False, on_delete=CASCADE)
     text = TextField(null=True, blank=True, default=None, max_length=255)
-    media = BooleanField(default=False, null=False)
+    media = CharField(default=None, null=True, blank=False, max_length=255)
 
     def clean(self):
         if self.text == '':
