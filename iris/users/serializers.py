@@ -103,3 +103,15 @@ class PasswordChangeSerializer(Serializer):
     # ?todo some check if password is strong
     def create(self, validated_data):
         pass
+
+
+class EmailChangeSerializer(Serializer):
+    email = CharField()
+
+    def update(self, instance, validated_data):
+        instance.email = validated_data['email']
+        instance.save()
+        return Response()
+
+    def create(self, validated_data):
+        pass

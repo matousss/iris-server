@@ -20,7 +20,8 @@ from rest_framework.response import Response
 from rest_framework.status import HTTP_202_ACCEPTED
 
 from .models import AccountActivation, IrisUser
-from .serializers import RegisterSerializer, UserSerializer, ActivationSerializer, PasswordChangeSerializer
+from .serializers import RegisterSerializer, UserSerializer, ActivationSerializer, PasswordChangeSerializer, \
+    EmailChangeSerializer
 
 
 def init_activation(user, *, save=False):
@@ -112,7 +113,6 @@ class LoginAPI(LoginView):
     authentication_classes = (PasswordAuthentication,)
 
 
-
 class AccountActivationAPI(GenericAPIView):
     serializer_class = ActivationSerializer
     authentication_classes = ()
@@ -144,7 +144,7 @@ class TokenCheckAPI(GenericAPIView):
 
 class PasswordChangeAPI(GenericAPIView):
     serializer_class = PasswordChangeSerializer
-    authentication_classes = (PasswordAuthentication, )
+    authentication_classes = (PasswordAuthentication,)
 
     def post(self, request):
         serializer = self.get_serializer(data=request.data)  # type: PasswordChangeSerializer
@@ -152,6 +152,16 @@ class PasswordChangeAPI(GenericAPIView):
 
         serializer.update(request.user, serializer.validated_data)
         # ?todo invalidate tokens
+        return Response()
+
+
+class EmailChangeAPI(GenericAPIView):
+    serializer_class = EmailChangeSerializer
+
+    def post(self, request):
+        serializer = self.get_serializer(data=request.data)  # type: EmailChangeSerializer
+        serializer.is_valid(raise_exception=True)
+        serializer.update(request.user, serializer.validated_data)
         return Response()
 
 

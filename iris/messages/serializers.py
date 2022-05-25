@@ -19,7 +19,9 @@ class DirectChannelSerializer(ModelSerializer):
         if user.id == attrs['users'][0].id:
             raise APIException(detail='Cannot message yourself', code='message_yourself')
         if len(DirectChannel.objects.filter(users__exact=attrs['users'][0].id).filter(users__exact=user.id)) > 0:
-            raise ValidationError(detail='Channel already exist', code='duplicate_request')
+            e = APIException(detail='Channel already exist', code='duplicate_request')
+            e.status_code = 406
+            raise e
         return r
 
     def create(self, validated_data):
