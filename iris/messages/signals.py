@@ -83,7 +83,6 @@ def user_relation_changed(*args, action, instance, pk_set, **kwargs):
                     'channel': channel_id,
                 }
             )
-        print(pk_set)
         object_update(instance.__class__, instance, serializer_class=AllChannelSerializer, get_listeners=lambda _: [str(pk) for pk in pk_set], created=True)
 
     elif action == 'post_remove':

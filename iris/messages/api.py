@@ -4,22 +4,18 @@ from django.http import Http404
 from django.utils import timezone
 from django.utils.datastructures import MultiValueDictKeyError
 from rest_framework import mixins
-from rest_framework.exceptions import ValidationError
+from rest_framework.exceptions import ValidationError, PermissionDenied
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 from rest_framework.serializers import ModelSerializer
-from rest_framework.status import HTTP_201_CREATED
-from rest_framework.viewsets import GenericViewSet
+from rest_framework.status import HTTP_201_CREATED, HTTP_204_NO_CONTENT
+from rest_framework.viewsets import GenericViewSet, ModelViewSet
 
 from .models import Channel, Message
 from .serializers import MessageSerializer, AllChannelSerializer, DateTimeSerializer
 
 
-class ChannelViewSet(mixins.CreateModelMixin,
-                     mixins.UpdateModelMixin,
-                     mixins.DestroyModelMixin,
-                     mixins.ListModelMixin,
-                     GenericViewSet):
+class ChannelViewSet(ModelViewSet):
     serializer_class = AllChannelSerializer
     queryset = Channel.objects.all()
 
@@ -37,13 +33,8 @@ class ChannelViewSet(mixins.CreateModelMixin,
         try:
             serializer_type = self.select_serializer(request.data['type'])  # type: ModelSerializer.__class__
         except KeyError:
-            raise ValidationError()
+            raise ValidationError('Invalid channel type')
         data = request.data.copy()
-        # if data['type'] == 'directchannel':
-        #     if str(request.user.id) not in data.getlist('users'):
-        #         users_list = data.getlist('users')
-        #         users_list.append(str(request.user.id))
-        #         data.setlist('users', users_list)
 
         serializer = serializer_type(data=data, context=self.get_serializer_context())
         serializer.is_valid(raise_exception=True)
@@ -59,7 +50,14 @@ class ChannelViewSet(mixins.CreateModelMixin,
     # check perms for adding
     # def patch(self, request, *args, **kwargs):
     #     return MethodNotAllowed(method='PATCH')
-
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        if hasattr(instance, 'groupchannel'):
+            user = request.user
+            if not user == instance.groupchannel.owner and user not in instance.groupchannel.admins.all():
+                raise PermissionDenied()
+        self.perform_destroy(instance)
+        return Response(status=HTTP_204_NO_CONTENT)
 
 
 class MessageViewSet(mixins.CreateModelMixin,

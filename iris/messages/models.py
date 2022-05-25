@@ -23,7 +23,7 @@ class GroupChannel(Channel):
     admins = ManyToManyField(settings.AUTH_USER_MODEL, blank=True, related_name='admins')
 
     def __str__(self):
-        return self.name
+        return str(self.name)
 
 
 def media_file_path(instance, file):

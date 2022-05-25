@@ -34,7 +34,14 @@ class GroupChannelSerializer(ModelSerializer):
         read_only_fields = ('id', 'owner')
 
     def create(self, validated_data):
-        GroupChannel.objects.create(owner=self.context['request'].user, **validated_data)
+        user = self.context['request'].user
+        admins = validated_data.pop('admins')
+        users = validated_data.pop('users')
+        o = GroupChannel.objects.create(owner=user, **validated_data)
+        o.admins.set(admins)
+        o.users.set(users)
+        o.users.add(user)
+        return o
 
 
 class ChannelSerializer(ModelSerializer):
