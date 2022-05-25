@@ -8,7 +8,6 @@ from .api import ChannelViewSet, MessageViewSet, ViewedChannelAPI
 router = DefaultRouter()
 router.register(r'channel', ChannelViewSet, basename='channel')
 router.register(r'message', MessageViewSet, basename='message')
-router.register(r'message', MessageViewSet, basename='message')
 
 
 urlpatterns = [

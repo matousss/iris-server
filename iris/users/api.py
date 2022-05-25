@@ -112,12 +112,6 @@ class LoginAPI(LoginView):
     authentication_classes = (PasswordAuthentication,)
 
 
-class UserAPIView(RetrieveAPIView):
-    serializer_class = UserSerializer
-
-    def get_object(self):
-        return self.request.user
-
 
 class AccountActivationAPI(GenericAPIView):
     serializer_class = ActivationSerializer
